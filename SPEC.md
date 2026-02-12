@@ -4,21 +4,21 @@
 
 ### Goals
 
-* **API-only**: no editor, no in-engine GUI required.
-* **Modular everything**: plugins can add systems, components, resources, asset loaders, renderer passes.
-* **ECS at the center**: entities are IDs, components are pure data, systems do behavior.
-* **Configurable tick loop**: fixed-step simulation + variable render, or fully custom scheduler.
-* **WebGL2 rendering backend**: 2D first, extensible to 2.5D, can be adapted to 3D later.
-* **Tauri desktop shell**: engine runs inside a webview; platform features via Tauri bridge.
-* **Determinism-friendly**: predictable ordering, stable iteration, optional fixed-point / seeded RNG.
-* **Testable**: headless mode so logic runs without GPU.
-* **Mod-friendly**: component schemas + asset pipeline designed for content packs.
+- **API-only**: no editor, no in-engine GUI required.
+- **Modular everything**: plugins can add systems, components, resources, asset loaders, renderer passes.
+- **ECS at the center**: entities are IDs, components are pure data, systems do behavior.
+- **Configurable tick loop**: fixed-step simulation + variable render, or fully custom scheduler.
+- **WebGL2 rendering backend**: 2D first, extensible to 2.5D, can be adapted to 3D later.
+- **Tauri desktop shell**: engine runs inside a webview; platform features via Tauri bridge.
+- **Determinism-friendly**: predictable ordering, stable iteration, optional fixed-point / seeded RNG.
+- **Testable**: headless mode so logic runs without GPU.
+- **Mod-friendly**: component schemas + asset pipeline designed for content packs.
 
 ### Non-Goals
 
-* No full 3D engine ambition in v1
-* No editor tooling baked in.
-* No physics engine rewrite — integrate a library when needed.
+- No full 3D engine ambition in v1
+- No editor tooling baked in.
+- No physics engine rewrite — integrate a library when needed.
 
 ---
 
@@ -28,29 +28,29 @@
 
 **Core (pure TS/JS, platform-agnostic)**
 
-* ECS World + Scheduler
-* Plugin Manager
-* Asset system (abstract I/O)
-* Time + Input abstraction
-* Events + Messaging
-* Deterministic utilities
-* Debug instrumentation hooks (API-only)
+- ECS World + Scheduler
+- Plugin Manager
+- Asset system (abstract I/O)
+- Time + Input abstraction
+- Events + Messaging
+- Deterministic utilities
+- Debug instrumentation hooks (API-only)
 
 **Renderer (WebGL2 module)**
 
-* Render graph / passes
-* Materials, shaders, pipelines
-* Sprite / text / tile / primitive draw
-* Batching + instancing
-* GPU resource management
-* Optional post-processing chain
+- Render graph / passes
+- Materials, shaders, pipelines
+- Sprite / text / tile / primitive draw
+- Batching + instancing
+- GPU resource management
+- Optional post-processing chain
 
 **Platform Shell**
 
-* Tauri app (Rust) + front-end (TS)
-* File I/O, native dialogs, windowing controls
-* Controller/rumble, filesystem access, save data
-* Logging integration
+- Tauri app (Rust) + front-end (TS)
+- File I/O, native dialogs, windowing controls
+- Controller/rumble, filesystem access, save data
+- Logging integration
 
 ---
 
@@ -58,11 +58,10 @@
 
 ## 2.1 Entities
 
-* `EntityId` is a 32-bit integer.
-* Entity lifecycle: `create()`, `destroy()`.
-* Reuse IDs via generational index to avoid stale references:
-
-  * `Entity = { index: u32, gen: u32 }` packed to 64-bit in JS via bigint or two ints.
+- `EntityId` is a 32-bit integer.
+- Entity lifecycle: `create()`, `destroy()`.
+- Reuse IDs via generational index to avoid stale references:
+  - `Entity = { index: u32, gen: u32 }` packed to 64-bit in JS via bigint or two ints.
 
 ## 2.2 Components
 
@@ -70,66 +69,65 @@ Components are pure data, no methods.
 
 ### Component requirements
 
-* Must be serializable (structured clone / AVRON / binary).
-* Must declare a schema:
-
-  * name
-  * version
-  * fields (types, defaults)
-  * optional migration path
+- Must be serializable (structured clone / AVRON / binary).
+- Must declare a schema:
+  - name
+  - version
+  - fields (types, defaults)
+  - optional migration path
 
 ### Storage
 
 Engine must support multiple storage strategies:
 
-* **Dense SoA** (default): `ComponentStore<T>` with packed arrays.
-* **Sparse map** (for rare components).
-* **Tag components** (boolean presence only).
-* **Chunked archetype mode (optional future)**: allow high-perf.
+- **Dense SoA** (default): `ComponentStore<T>` with packed arrays.
+- **Sparse map** (for rare components).
+- **Tag components** (boolean presence only).
+- **Chunked archetype mode (optional future)**: allow high-perf.
 
 ## 2.3 Resources (Global Singletons)
 
 Global state stored in `Resources` table:
 
-* `Time`, `Input`, `Renderer`, `Assets`, `Rng`, `Config`, `Profiler`
-* Plugins can register resources.
-* Resources are versioned and can be hot-swapped.
+- `Time`, `Input`, `Renderer`, `Assets`, `Rng`, `Config`, `Profiler`
+- Plugins can register resources.
+- Resources are versioned and can be hot-swapped.
 
 ## 2.4 Systems
 
 A system is a function with declared dependencies:
 
 ```ts
-type System = (ctx: SystemContext) => void | Promise<void>;
+type System = (ctx: SystemContext) => void | Promise<void>
 ```
 
 ### System metadata
 
-* `id`, `stage`, `order`
-* `reads`: component/resource reads
-* `writes`: component/resource writes
-* `queries`: component sets with optional filters
-* `run_if`: predicate (e.g. only if window focused)
+- `id`, `stage`, `order`
+- `reads`: component/resource reads
+- `writes`: component/resource writes
+- `queries`: component sets with optional filters
+- `run_if`: predicate (e.g. only if window focused)
 
 This metadata exists so it is possible to:
 
-* detect conflicts
-* schedule in parallel later
-* build a debug “why is this system running” trace
+- detect conflicts
+- schedule in parallel later
+- build a debug “why is this system running” trace
 
 ## 2.5 Queries
 
 Query API supports:
 
-* `with(A, B)`
-* `without(C)`
-* `optional(D)`
-* `changed(A)` (dirty tracking)
-* `added(A)`, `removed(A)` events
+- `with(A, B)`
+- `without(C)`
+- `optional(D)`
+- `changed(A)` (dirty tracking)
+- `added(A)`, `removed(A)` events
 
 Query iteration order is stable and deterministic by default:
 
-* sorted by `EntityId` ascending unless user opts out.
+- sorted by `EntityId` ascending unless user opts out.
 
 ---
 
@@ -139,14 +137,14 @@ Query iteration order is stable and deterministic by default:
 
 Engine supports two clocks:
 
-* **Simulation clock** (fixed step)
-* **Render clock** (variable, vsync-driven)
+- **Simulation clock** (fixed step)
+- **Render clock** (variable, vsync-driven)
 
 Default config:
 
-* `fixedDelta = 1/60`
-* `maxCatchUpSteps = 5` (prevents spiral of death)
-* `renderInterpolation = true` (lerp transform for smoothness)
+- `fixedDelta = 1/60`
+- `maxCatchUpSteps = 5` (prevents spiral of death)
+- `renderInterpolation = true` (lerp transform for smoothness)
 
 ## 3.2 Stages
 
@@ -168,23 +166,23 @@ Plugins can add stages and reorder (within constraints).
 
 Users can:
 
-* use default loop
-* override scheduler
-* inject custom stages/systems
+- use default loop
+- override scheduler
+- inject custom stages/systems
 
 Engine exposes:
 
-* `engine.step(dtReal)` for manual stepping
-* `engine.run()` which binds to `requestAnimationFrame`
-* `engine.pause()` / `resume()`
+- `engine.step(dtReal)` for manual stepping
+- `engine.run()` which binds to `requestAnimationFrame`
+- `engine.pause()` / `resume()`
 
 ## 3.4 Async systems
 
 Support promise-returning systems with rules:
 
-* `FixedUpdate` stage is sync-only by default (determinism).
-* Async allowed in `Update`, `RenderPrep`, asset stages.
-* Provide explicit `AsyncStage` if needed.
+- `FixedUpdate` stage is sync-only by default (determinism).
+- Async allowed in `Update`, `RenderPrep`, asset stages.
+- Provide explicit `AsyncStage` if needed.
 
 ---
 
@@ -196,33 +194,33 @@ A plugin is a module exporting:
 
 ```ts
 interface Plugin {
-  id: string;
-  version: string;
-  depends?: string[];
-  init(app: AppBuilder): void;
-  shutdown?(app: App): void;
+  id: string
+  version: string
+  depends?: string[]
+  init(app: AppBuilder): void
+  shutdown?(app: App): void
 }
 ```
 
 ## 4.2 Capabilities plugins can register
 
-* components + schema
-* resources
-* systems + stages
-* render passes
-* asset loaders
-* event types
-* serialization handlers
-* debug panels (API endpoints only)
+- components + schema
+- resources
+- systems + stages
+- render passes
+- asset loaders
+- event types
+- serialization handlers
+- debug panels (API endpoints only)
 
 ## 4.3 Hot reload
 
-* Plugins may be reloadable if they:
+- Plugins may be reloadable if they:
+  - don’t change schema incompatibly
+  - provide migration steps
 
-  * don’t change schema incompatibly
-  * provide migration steps
-* Engine can swap systems safely between frames.
-* Renderer resources must support recompile/reupload.
+- Engine can swap systems safely between frames.
+- Renderer resources must support recompile/reupload.
 
 ---
 
@@ -230,12 +228,11 @@ interface Plugin {
 
 ## 5.1 Event Bus
 
-* Typed event channels: `Events<T>`
-* Events are stored per-frame and cleared by stage boundaries.
-* Events can be:
-
-  * immediate (synchronous dispatch)
-  * buffered (frame-late consumption)
+- Typed event channels: `Events<T>`
+- Events are stored per-frame and cleared by stage boundaries.
+- Events can be:
+  - immediate (synchronous dispatch)
+  - buffered (frame-late consumption)
 
 Defaults to buffered.
 
@@ -243,9 +240,9 @@ Defaults to buffered.
 
 A `CommandBuffer` queues world mutations:
 
-* create/destroy
-* add/remove components
-* set resource
+- create/destroy
+- add/remove components
+- set resource
 
 Executed at safe sync points (end of stages).
 
@@ -257,35 +254,35 @@ This prevents “mutate while iterating.”
 
 ## 6.1 Asset IDs and handles
 
-* `AssetId` is stable (string or hashed).
-* `Handle<T>` references an asset + version.
-* Assets are loaded through loaders based on extension / declared type.
+- `AssetId` is stable (string or hashed).
+- `Handle<T>` references an asset + version.
+- Assets are loaded through loaders based on extension / declared type.
 
 ## 6.2 Loaders
 
 Loaders are plugins:
 
-* `TextureLoader`
-* `AtlasLoader`
-* `ShaderLoader`
-* `AudioLoader`
-* `FontLoader`
-* `AvronLoader`
-* `BinaryBlobLoader`
+- `TextureLoader`
+- `AtlasLoader`
+- `ShaderLoader`
+- `AudioLoader`
+- `FontLoader`
+- `AvronLoader`
+- `BinaryBlobLoader`
 
 Loaders must support:
 
-* async load
-* caching
-* hot reload (dev mode)
-* dependency tracking (atlas depends on textures)
+- async load
+- caching
+- hot reload (dev mode)
+- dependency tracking (atlas depends on textures)
 
 ## 6.3 Storage
 
 Assets live in:
 
-* `AssetCache` (CPU)
-* `GpuCache` (GPU-resident resources)
+- `AssetCache` (CPU)
+- `GpuCache` (GPU-resident resources)
 
 They can evict by policy (LRU, memory budget).
 
@@ -293,11 +290,10 @@ They can evict by policy (LRU, memory budget).
 
 Engine never directly touches filesystem:
 
-* uses `AssetSource` interface
-
-  * `fetch(url)`
-  * `readFile(path)` (provided by platform shell)
-  * `watch()` (dev mode)
+- uses `AssetSource` interface
+  - `fetch(url)`
+  - `readFile(path)` (provided by platform shell)
+  - `watch()` (dev mode)
 
 Tauri provides `readFile`, `watch`, saves.
 
@@ -307,28 +303,27 @@ Tauri provides `readFile`, `watch`, saves.
 
 ## 7.1 Core renderer goals
 
-* 2D renderer with:
+- 2D renderer with:
+  - sprites
+  - sprite atlas support
+  - text (SDF or bitmap font)
+  - tilemaps
+  - basic shapes (lines/rects/circles)
 
-  * sprites
-  * sprite atlas support
-  * text (SDF or bitmap font)
-  * tilemaps
-  * basic shapes (lines/rects/circles)
-* Batching:
+- Batching:
+  - dynamic sprite batches
+  - instancing where possible
 
-  * dynamic sprite batches
-  * instancing where possible
-* Render graph:
-
-  * passes + dependencies
-  * optional post stack (blur, bloom, CRT, etc.)
+- Render graph:
+  - passes + dependencies
+  - optional post stack (blur, bloom, CRT, etc.)
 
 ## 7.2 Coordinate conventions
 
-* World units: floats
-* Camera is orthographic by default in v1.
-* Z used for layering only (or render order key).
-* Origin configurable: center or top-left (default top-left for 2D sanity).
+- World units: floats
+- Camera is orthographic by default in v1.
+- Z used for layering only (or render order key).
+- Origin configurable: center or top-left (default top-left for 2D sanity).
 
 ## 7.3 Render components
 
@@ -336,35 +331,35 @@ Minimum required components:
 
 **Transform2D**
 
-* position (x,y)
-* rotation (radians)
-* scale (x,y)
-* zIndex
+- position (x,y)
+- rotation (radians)
+- scale (x,y)
+- zIndex
 
 **Sprite**
 
-* texture/atlas handle
-* UV rect
-* tint RGBA
-* pivot
-* blend mode
+- texture/atlas handle
+- UV rect
+- tint RGBA
+- pivot
+- blend mode
 
 **Camera2D**
 
-* position
-* zoom
-* viewport
-* clear color
-* layers mask
+- position
+- zoom
+- viewport
+- clear color
+- layers mask
 
 Also planned:
 
-* `Light2D`, `ParticleEmitter`, `NineSlice`
+- `Light2D`, `ParticleEmitter`, `NineSlice`
 
 ## 7.4 Materials & Shaders
 
-* Material is a shader + uniform set + render state.
-* Shaders compiled with caching and error reporting hooks.
+- Material is a shader + uniform set + render state.
+- Shaders compiled with caching and error reporting hooks.
 
 ## 7.5 Text rendering
 
@@ -378,37 +373,37 @@ Text is rendered through SDF.
 
 Support:
 
-* keyboard
-* mouse
-* wheel
-* touch (future)
-* gamepad
+- keyboard
+- mouse
+- wheel
+- touch (future)
+- gamepad
 
 Input snapshots each frame:
 
-* `isDown`, `wasPressed`, `wasReleased`
-* pointer position in screen + world coords
+- `isDown`, `wasPressed`, `wasReleased`
+- pointer position in screen + world coords
 
 Support action mapping:
 
-* `ActionMap` defines actions -> bindings
-* allow user rebinding
+- `ActionMap` defines actions -> bindings
+- allow user rebinding
 
 ---
 
 # 9) Audio System
 
-* WebAudio backend
-* `AudioClip` assets
-* `AudioSource` component:
+- WebAudio backend
+- `AudioClip` assets
+- `AudioSource` component:
+  - play/stop/pause
+  - loop
+  - spatial (optional later)
 
-  * play/stop/pause
-  * loop
-  * spatial (optional later)
-* Mixer buses:
+- Mixer buses:
+  - master/music/sfx/ui
 
-  * master/music/sfx/ui
-* Volume + mute controls
+- Volume + mute controls
 
 ---
 
@@ -416,39 +411,39 @@ Support action mapping:
 
 ## 10.1 World serialization modes
 
-* **Snapshot**: full world state for save/load
-* **Replay**: inputs + seeded RNG for deterministic replays (best-effort)
+- **Snapshot**: full world state for save/load
+- **Replay**: inputs + seeded RNG for deterministic replays (best-effort)
 
 ## 10.2 Component serialization
 
 Each component schema provides:
 
-* `serialize(component) -> bytes/avron`
-* `deserialize(data) -> component`
-* `migrate(versionFrom -> versionTo)`
+- `serialize(component) -> bytes/avron`
+- `deserialize(data) -> component`
+- `migrate(versionFrom -> versionTo)`
 
 ## 10.3 Save system
 
 Platform provides storage:
 
-* Tauri: app data dir
-* Web: IndexedDB (if used later)
+- Tauri: app data dir
+- Web: IndexedDB (if used later)
 
 ---
 
 # 11) Determinism Features
 
-* Fixed update step
-* Stable system order
-* Stable query order
-* Seeded RNG resource
-* Optional fixed-point math module (for “true determinism” mode)
+- Fixed update step
+- Stable system order
+- Stable query order
+- Seeded RNG resource
+- Optional fixed-point math module (for “true determinism” mode)
 
 Engine should expose a “determinism score” debug report:
 
-* warns if non-deterministic systems run in FixedUpdate
-* warns if time-based randomness is used
-* warns if iteration order is unstable
+- warns if non-deterministic systems run in FixedUpdate
+- warns if time-based randomness is used
+- warns if iteration order is unstable
 
 ---
 
@@ -456,25 +451,24 @@ Engine should expose a “determinism score” debug report:
 
 No GUI, but expose introspection APIs:
 
-* `engine.inspect.world()`:
+- `engine.inspect.world()`:
+  - entity count
+  - component counts
+  - archetype-ish stats
 
-  * entity count
-  * component counts
-  * archetype-ish stats
-* `engine.inspect.systems()`:
+- `engine.inspect.systems()`:
+  - stage order
+  - last run time
+  - average runtime
 
-  * stage order
-  * last run time
-  * average runtime
-* `engine.inspect.assets()`:
+- `engine.inspect.assets()`:
+  - loaded assets
+  - GPU memory estimate
 
-  * loaded assets
-  * GPU memory estimate
-* Profiler hooks:
-
-  * per-system timings
-  * render timings
-  * GC hints (where possible)
+- Profiler hooks:
+  - per-system timings
+  - render timings
+  - GC hints (where possible)
 
 Expose a simple local HTTP debug endpoint in dev mode (Tauri/Rust side) alongside JS API.
 
@@ -482,23 +476,20 @@ Expose a simple local HTTP debug endpoint in dev mode (Tauri/Rust side) alongsid
 
 # 13) Error Handling & Logging
 
-* Structured logger:
-
-  * levels: trace/debug/info/warn/error
-  * tags (system/plugin/renderer)
-  * supports platform sinks:
-
-    * console
-    * file (Tauri)
-    * in-memory ring buffer for crash reports
+- Structured logger:
+  - levels: trace/debug/info/warn/error
+  - tags (system/plugin/renderer)
+  - supports platform sinks:
+    - console
+    - file (Tauri)
+    - in-memory ring buffer for crash reports
 
 Renderer errors:
 
-* shader compile errors should include:
-
-  * line numbers
-  * full expanded source (with includes resolved)
-  * material name
+- shader compile errors should include:
+  - line numbers
+  - full expanded source (with includes resolved)
+  - material name
 
 ---
 
@@ -542,45 +533,46 @@ const app = createApp()
   .use(AudioPlugin)
   .use(AssetPlugin)
   .use(MyGamePlugin)
-  .build();
+  .build()
 
-app.run();
+app.run()
 ```
 
 ## 15.2 Registering components
 
 ```ts
-app.components.register(Transform2D, schema);
+app.components.register(Transform2D, schema)
 ```
 
 ## 15.3 Adding systems
 
 ```ts
-app.systems.add("FixedUpdate", myMovementSystem, { order: 50 });
+app.systems.add('FixedUpdate', myMovementSystem, { order: 50 })
 ```
 
 ## 15.4 Spawning entities
 
 ```ts
-const e = world.spawn()
-  .add(Transform2D, { x:0, y:0 })
+const e = world
+  .spawn()
+  .add(Transform2D, { x: 0, y: 0 })
   .add(Sprite, { texture: texHandle })
-  .id();
+  .id()
 ```
 
 ---
 
 # 16) Tauri Integration Notes
 
-* WebGL runs inside the webview — good.
-* Native filesystem access via Tauri commands:
+- WebGL runs inside the webview — good.
+- Native filesystem access via Tauri commands:
+  - `readFile(path)`
+  - `writeFile(path)`
+  - `listDir(path)`
+  - `watchDir(path)` (dev)
 
-  * `readFile(path)`
-  * `writeFile(path)`
-  * `listDir(path)`
-  * `watchDir(path)` (dev)
-* Save data uses Tauri app config dir.
-* Crash logs can be persisted via Rust side sink.
+- Save data uses Tauri app config dir.
+- Crash logs can be persisted via Rust side sink.
 
 ---
 

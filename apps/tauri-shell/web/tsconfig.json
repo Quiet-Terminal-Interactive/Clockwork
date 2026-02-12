@@ -6,7 +6,5 @@
     "outDir": "dist"
   },
   "include": ["src/**/*.ts"],
-  "references": [
-    { "path": "../../../engine/core/ecs" }
-  ]
+  "references": [{ "path": "../../../engine/core/ecs" }]
 }

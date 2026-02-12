@@ -6,7 +6,10 @@ export interface EntityId {
   generation: number
 }
 
-export type ComponentType<T = unknown> = string | symbol | (new (...args: any[]) => T)
+export type ComponentType<T = unknown> =
+  | string
+  | symbol
+  | (new (...args: unknown[]) => T)
 
 export type ResourceMap = Map<string | symbol, unknown>
 
@@ -20,9 +23,9 @@ export interface ComponentSchema {
   name: string
   version: number
   fields: FieldDefinition[]
-  serialize(component: any): Uint8Array
-  deserialize(data: Uint8Array): any
-  migrate?(from: number, to: number, data: any): any
+  serialize(component: unknown): Uint8Array
+  deserialize(data: Uint8Array): unknown
+  migrate?(from: number, to: number, data: unknown): unknown
 }
 
 interface StoredComponent<T> {
@@ -259,14 +262,29 @@ interface DeferredEntity {
 type CommandOperation =
   | { kind: 'spawn'; deferred: DeferredEntity }
   | { kind: 'destroy'; entity: EntityId | DeferredEntity }
-  | { kind: 'add'; entity: EntityId | DeferredEntity; type: ComponentType<unknown>; component: unknown }
-  | { kind: 'remove'; entity: EntityId | DeferredEntity; type: ComponentType<unknown> }
+  | {
+      kind: 'add'
+      entity: EntityId | DeferredEntity
+      type: ComponentType<unknown>
+      component: unknown
+    }
+  | {
+      kind: 'remove'
+      entity: EntityId | DeferredEntity
+      type: ComponentType<unknown>
+    }
 
 /** Fluent immediate entity creation helper. */
 export class EntityBuilder {
-  constructor(private readonly world: World, private readonly entity: EntityId) {}
+  constructor(
+    private readonly world: World,
+    private readonly entity: EntityId
+  ) {}
 
-  with<TComponent>(type: ComponentType<TComponent>, component: TComponent): this {
+  with<TComponent>(
+    type: ComponentType<TComponent>,
+    component: TComponent
+  ): this {
     this.world.addComponent(this.entity, type, component)
     return this
   }
@@ -280,7 +298,10 @@ export class EntityBuilder {
 export class DeferredEntityBuilder {
   constructor(private readonly deferred: DeferredEntity) {}
 
-  with<TComponent>(type: ComponentType<TComponent>, component: TComponent): this {
+  with<TComponent>(
+    type: ComponentType<TComponent>,
+    component: TComponent
+  ): this {
     this.deferred.initialComponents.push({ type, component })
     return this
   }
@@ -302,7 +323,11 @@ export class CommandBuffer {
     this.operations.push({ kind: 'destroy', entity })
   }
 
-  addComponent<TComponent>(entity: EntityId, type: ComponentType<TComponent>, component: TComponent): void {
+  addComponent<TComponent>(
+    entity: EntityId,
+    type: ComponentType<TComponent>,
+    component: TComponent
+  ): void {
     this.operations.push({ kind: 'add', entity, type, component })
   }
 
@@ -348,7 +373,9 @@ export class CommandBuffer {
     this.operations.length = 0
   }
 
-  private resolveEntity(entity: EntityId | DeferredEntity): EntityId | undefined {
+  private resolveEntity(
+    entity: EntityId | DeferredEntity
+  ): EntityId | undefined {
     if ('initialComponents' in entity) {
       return entity.resolved
     }
@@ -360,7 +387,10 @@ export class CommandBuffer {
 /** ECS world containing entities, component stores, and global resources. */
 export class World {
   readonly entities = new EntityManager()
-  readonly components = new Map<ComponentType<unknown>, ComponentStore<unknown>>()
+  readonly components = new Map<
+    ComponentType<unknown>,
+    ComponentStore<unknown>
+  >()
   readonly resources: ResourceMap = new Map()
 
   private changeTick = 0
@@ -399,11 +429,17 @@ export class World {
     return new Query<T>(this)
   }
 
-  getStore<TComponent>(type: ComponentType<TComponent>): ComponentStore<TComponent> | undefined {
+  getStore<TComponent>(
+    type: ComponentType<TComponent>
+  ): ComponentStore<TComponent> | undefined {
     return this.components.get(type) as ComponentStore<TComponent> | undefined
   }
 
-  addComponent<TComponent>(entity: EntityId, type: ComponentType<TComponent>, component: TComponent): void {
+  addComponent<TComponent>(
+    entity: EntityId,
+    type: ComponentType<TComponent>,
+    component: TComponent
+  ): void {
     if (!this.entities.isAlive(entity)) {
       return
     }
@@ -427,7 +463,10 @@ export class World {
     this.changeTick += 1
   }
 
-  getComponent<TComponent>(entity: EntityId, type: ComponentType<TComponent>): TComponent | undefined {
+  getComponent<TComponent>(
+    entity: EntityId,
+    type: ComponentType<TComponent>
+  ): TComponent | undefined {
     return this.getStore(type)?.get(entity)
   }
 
@@ -435,12 +474,19 @@ export class World {
     return this.components.get(type)?.has(entity) ?? false
   }
 
-  getComponentChangedAt(entity: EntityId, type: ComponentType<unknown>): number | undefined {
+  getComponentChangedAt(
+    entity: EntityId,
+    type: ComponentType<unknown>
+  ): number | undefined {
     return this.components.get(type)?.getChangedAt(entity)
   }
 
-  private ensureStore<TComponent>(type: ComponentType<TComponent>): ComponentStore<TComponent> {
-    let store = this.components.get(type) as ComponentStore<TComponent> | undefined
+  private ensureStore<TComponent>(
+    type: ComponentType<TComponent>
+  ): ComponentStore<TComponent> {
+    let store = this.components.get(type) as
+      | ComponentStore<TComponent>
+      | undefined
     if (!store) {
       store = new ComponentStore<TComponent>()
       this.components.set(type, store as ComponentStore<unknown>)

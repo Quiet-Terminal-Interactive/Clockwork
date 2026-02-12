@@ -56,18 +56,28 @@ describe('Query', () => {
 
     const e3 = world.spawn().with(Position, { x: 3, y: 0 }).build()
     const e1 = world.spawn().with(Position, { x: 1, y: 0 }).build()
-    const e2 = world.spawn().with(Position, { x: 2, y: 0 }).with(Velocity, { x: 0, y: 1 }).build()
+    const e2 = world
+      .spawn()
+      .with(Position, { x: 2, y: 0 })
+      .with(Velocity, { x: 0, y: 1 })
+      .build()
 
     world.addComponent(e3, Health, 100)
 
-    const results = [...world.query().with(Position).without(Velocity).optional(Health).iter()]
+    const results = [
+      ...world.query().with(Position).without(Velocity).optional(Health).iter()
+    ]
 
     expect(results).toHaveLength(2)
     expect(ids(results)).toEqual([e3.index, e1.index].sort((a, b) => a - b))
 
-    const maybeHealth = results.find((r) => r.entity.index === e3.index)?.components.get(Health)
+    const maybeHealth = results
+      .find((r) => r.entity.index === e3.index)
+      ?.components.get(Health)
     expect(maybeHealth).toBe(100)
-    expect(results.find((r) => r.entity.index === e1.index)?.components.get(Health)).toBeUndefined()
+    expect(
+      results.find((r) => r.entity.index === e1.index)?.components.get(Health)
+    ).toBeUndefined()
 
     expect(results.some((r) => r.entity.index === e2.index)).toBe(false)
   })

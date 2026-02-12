@@ -46,5 +46,5 @@ corepack pnpm --filter @clockwork/tauri-shell-web dev
 ## Typical pre-commit flow
 
 ```bash
-corepack pnpm lint && corepack pnpm typecheck && corepack pnpm test && corepack pnpm build
+corepack pnpm lint && corepack pnpm format && corepack pnpm typecheck && corepack pnpm test && corepack pnpm build
 ```

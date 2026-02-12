@@ -1,6 +1,6 @@
 # Clockwork Engine – Step-by-Step Development Plan
 
-## Phase 0 – Project Foundation & TypeScript Setup
+## ~~Phase 0 – Project Foundation & TypeScript Setup~~ COMPLETE
 
 ### Goal
 Establish clean TypeScript project structure with build tooling and module boundaries.
@@ -56,7 +56,7 @@ Run `npm test` and see green checkmarks.
 
 ---
 
-## Phase 1 – Core ECS Foundation
+## ~~Phase 1 – Core ECS Foundation~~ COMPLETE
 
 ### Goal
 Implement the Entity Component System without any rendering or platform dependencies.

@@ -4,6 +4,9 @@ import { fileURLToPath } from 'node:url'
 export default defineConfig({
   resolve: {
     alias: {
+      '@clockwork/app': fileURLToPath(
+        new URL('./engine/core/app/src/index.ts', import.meta.url)
+      ),
       '@clockwork/assets': fileURLToPath(
         new URL('./engine/core/assets/src/index.ts', import.meta.url)
       ),

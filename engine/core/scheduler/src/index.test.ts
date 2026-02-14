@@ -1,0 +1,170 @@
+import { describe, expect, it } from 'vitest'
+import { type System, Scheduler, type WorldLike, packageId } from './index'
+
+class TestWorld implements WorldLike {
+  readonly resources = new Map<string | symbol, unknown>()
+  flushCount = 0
+
+  commands() {
+    return {
+      flush: () => {
+        this.flushCount += 1
+      }
+    }
+  }
+}
+
+function createSystem(
+  id: string,
+  execute: System['execute'],
+  options?: { stage?: string; order?: number; runIf?: System['runIf'] }
+): System {
+  const system: System = {
+    id,
+    stage: options?.stage ?? 'Update',
+    order: options?.order ?? 0,
+    reads: [],
+    writes: [],
+    execute
+  }
+
+  if (options?.runIf) {
+    system.runIf = options.runIf
+  }
+
+  return system
+}
+
+describe('scheduler package', () => {
+  it('exports stable package id', () => {
+    expect(packageId).toBe('@clockwork/scheduler')
+  })
+})
+
+describe('fixed timestep', () => {
+  it('runs fixed update at 60 TPS independent of frame rate', async () => {
+    const world = new TestWorld()
+    const scheduler = new Scheduler({
+      world,
+      time: { fixedDelta: 1 / 60, maxCatchUpSteps: 10 }
+    })
+
+    let fixedCalls = 0
+    scheduler.addSystem(
+      'FixedUpdate',
+      createSystem('fixed', () => {
+        fixedCalls += 1
+      })
+    )
+
+    scheduler.run()
+    await scheduler.step(1 / 30)
+    await scheduler.step(1 / 30)
+
+    expect(fixedCalls).toBe(4)
+  })
+})
+
+describe('system ordering', () => {
+  it('executes in order with stable ties', async () => {
+    const scheduler = new Scheduler()
+    const calls: string[] = []
+
+    scheduler.addSystem(
+      'Update',
+      createSystem(
+        'a',
+        () => {
+          calls.push('a')
+        },
+        { order: 20 }
+      )
+    )
+
+    scheduler.addSystem(
+      'Update',
+      createSystem(
+        'b',
+        () => {
+          calls.push('b')
+        },
+        { order: 10 }
+      )
+    )
+
+    scheduler.addSystem(
+      'Update',
+      createSystem(
+        'c',
+        () => {
+          calls.push('c')
+        },
+        { order: 10 }
+      )
+    )
+
+    scheduler.run()
+    await scheduler.step(1 / 60)
+
+    expect(calls).toEqual(['b', 'c', 'a'])
+  })
+})
+
+describe('async systems', () => {
+  it('allows async systems in allowed stages', async () => {
+    const scheduler = new Scheduler()
+    let ran = false
+
+    scheduler.addSystem(
+      'Render',
+      createSystem('render-async', async () => {
+        await Promise.resolve()
+        ran = true
+      })
+    )
+
+    scheduler.run()
+    await scheduler.step(1 / 60)
+
+    expect(ran).toBe(true)
+  })
+
+  it('rejects async systems in disallowed stages', async () => {
+    const scheduler = new Scheduler()
+
+    scheduler.addSystem(
+      'Update',
+      createSystem('update-async', async () => {
+        await Promise.resolve()
+      })
+    )
+
+    scheduler.run()
+    await expect(scheduler.step(1 / 60)).rejects.toThrow(
+      'does not allow async systems'
+    )
+  })
+})
+
+describe('runIf predicate', () => {
+  it('skips systems when runIf returns false', async () => {
+    const scheduler = new Scheduler()
+    let calls = 0
+
+    scheduler.addSystem(
+      'Update',
+      createSystem(
+        'conditional',
+        () => {
+          calls += 1
+        },
+        { runIf: () => false }
+      )
+    )
+
+    scheduler.run()
+    await scheduler.step(1 / 60)
+
+    expect(calls).toBe(0)
+  })
+})

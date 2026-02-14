@@ -17,6 +17,7 @@
     "composite": true,
     "baseUrl": ".",
     "paths": {
+      "@clockwork/app": ["engine/core/app/src/index.ts"],
       "@clockwork/assets": ["engine/core/assets/src/index.ts"],
       "@clockwork/audio": ["engine/core/audio/src/index.ts"],
       "@clockwork/ecs": ["engine/core/ecs/src/index.ts"],

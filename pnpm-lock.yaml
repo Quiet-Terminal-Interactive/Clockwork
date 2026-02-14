@@ -48,6 +48,18 @@ importers:
         specifier: workspace:*
         version: link:../../../engine/core/ecs
 
+  engine/core/app:
+    dependencies:
+      '@clockwork/ecs':
+        specifier: workspace:*
+        version: link:../ecs
+      '@clockwork/events':
+        specifier: workspace:*
+        version: link:../events
+      '@clockwork/scheduler':
+        specifier: workspace:*
+        version: link:../scheduler
+
   engine/core/assets: {}
 
   engine/core/audio: {}

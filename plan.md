@@ -164,7 +164,7 @@ interface ComponentSchema {
 
 ---
 
-## Phase 2 – Scheduler & Game Loop
+## ~~Phase 2 – Scheduler & Game Loop~~ COMPLETE
 
 ### Goal
 
@@ -284,7 +284,7 @@ function step(dtReal: number) {
 
 ---
 
-## Phase 3 – Event & Messaging System
+## ~~Phase 3 – Event & Messaging System~~ COMPLETE
 
 ### Goal
 
@@ -357,7 +357,7 @@ class InputEvent {
 
 ---
 
-## Phase 4 – Plugin System
+## ~~Phase 4 – Plugin System~~ COMPLETE
 
 ### Goal
 

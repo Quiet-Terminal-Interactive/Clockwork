@@ -1,6 +1,7 @@
 {
   "files": [],
   "references": [
+    { "path": "engine/core/app" },
     { "path": "engine/core/assets" },
     { "path": "engine/core/audio" },
     { "path": "engine/core/ecs" },

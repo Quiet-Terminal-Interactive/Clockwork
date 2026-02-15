@@ -1,5 +1,5 @@
 /** App builder and plugin lifecycle orchestration. */
-import { type ComponentSchema, World } from '@clockwork/ecs'
+import { type ComponentSchema, type ResourceToken, World } from '@clockwork/ecs'
 import { EventBus } from '@clockwork/events'
 import { Scheduler, type System } from '@clockwork/scheduler'
 
@@ -134,7 +134,7 @@ export class ResourceRegistry {
 
   installTo(world: World): void {
     for (const [type, resource] of this.resources.entries()) {
-      world.resources.set(type as string | symbol, resource)
+      world.insertResource(type as ResourceToken<unknown>, resource)
     }
   }
 

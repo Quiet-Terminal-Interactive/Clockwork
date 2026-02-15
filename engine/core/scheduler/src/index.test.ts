@@ -2,7 +2,11 @@ import { describe, expect, it } from 'vitest'
 import { type System, Scheduler, type WorldLike, packageId } from './index'
 
 class TestWorld implements WorldLike {
-  readonly resources = new Map<string | symbol, unknown>()
+  readonly resources = {
+    get<T>(): T {
+      throw new Error('No test resources registered')
+    }
+  }
   flushCount = 0
 
   commands() {

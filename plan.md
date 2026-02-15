@@ -468,7 +468,7 @@ const PhysicsPlugin: Plugin = {
 
 ---
 
-## Phase 5 – Resource System (Global Singletons)
+## ~~Phase 5 – Resource System (Global Singletons)~~ COMPLETE
 
 ### Goal
 
@@ -534,7 +534,7 @@ function movementSystem(ctx: SystemContext) {
 
 ---
 
-## Phase 6 – Asset System Foundation
+## ~~Phase 6 – Asset System Foundation~~ COMPLETE
 
 ### Goal
 

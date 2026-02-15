@@ -11,7 +11,148 @@ export type ComponentType<T = unknown> =
   | symbol
   | (new (...args: unknown[]) => T)
 
-export type ResourceMap = Map<string | symbol, unknown>
+export type ResourceToken<T = unknown> =
+  | string
+  | symbol
+  | (new (...args: unknown[]) => T)
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export class ResourceType<_T> {
+  private static symbolIds = new Map<symbol, number>()
+  private static ctorIds = new WeakMap<object, number>()
+  private static nextId = 0
+
+  readonly id: string
+  readonly version: number
+  readonly dependencies: ReadonlyArray<ResourceType<unknown>>
+
+  constructor(
+    id: string,
+    options?: {
+      version?: number
+      dependencies?: ReadonlyArray<ResourceType<unknown>>
+    }
+  ) {
+    this.id = id
+    this.version = options?.version ?? 1
+    this.dependencies = options?.dependencies ?? []
+  }
+
+  static fromToken<T>(token: ResourceToken<T>): ResourceType<T> {
+    if (typeof token === 'string') {
+      return new ResourceType<T>(`string:${token}`)
+    }
+    if (typeof token === 'symbol') {
+      let symbolId = this.symbolIds.get(token)
+      if (symbolId === undefined) {
+        symbolId = this.nextId++
+        this.symbolIds.set(token, symbolId)
+      }
+      return new ResourceType<T>(`symbol:${symbolId}`)
+    }
+
+    let ctorId = this.ctorIds.get(token)
+    if (ctorId === undefined) {
+      ctorId = this.nextId++
+      this.ctorIds.set(token, ctorId)
+    }
+
+    return new ResourceType<T>(`ctor:${ctorId}`)
+  }
+}
+
+interface StoredResource {
+  type: ResourceType<unknown>
+  value: unknown
+  revision: number
+}
+
+export class ResourceMap {
+  private readonly values = new Map<string, StoredResource>()
+  private revision = 0
+
+  insert<T>(type: ResourceType<T>, resource: T): void {
+    for (const dependency of type.dependencies) {
+      const installed = this.values.get(dependency.id)
+      if (!installed) {
+        throw new Error(
+          `Resource "${type.id}" depends on missing "${dependency.id}"`
+        )
+      }
+      if (installed.type.version < dependency.version) {
+        throw new Error(
+          `Resource "${type.id}" requires "${dependency.id}" version ${dependency.version}+, found ${installed.type.version}`
+        )
+      }
+    }
+
+    this.revision += 1
+    this.values.set(type.id, {
+      type,
+      value: resource,
+      revision: this.revision
+    })
+  }
+
+  get<T>(type: ResourceType<T>): T {
+    const resource = this.tryGet(type)
+    if (resource === undefined) {
+      throw new Error(
+        `Resource "${type.id}" is not registered (required version ${type.version})`
+      )
+    }
+
+    return resource
+  }
+
+  tryGet<T>(type: ResourceType<T>): T | undefined {
+    const stored = this.values.get(type.id)
+    if (!stored) {
+      return undefined
+    }
+
+    return stored.value as T
+  }
+
+  remove<T>(type: ResourceType<T>): void {
+    this.values.delete(type.id)
+  }
+
+  has<T>(type: ResourceType<T>): boolean {
+    return this.values.has(type.id)
+  }
+
+  getInstalledVersion<T>(type: ResourceType<T>): number | undefined {
+    return this.values.get(type.id)?.type.version
+  }
+
+  getRevision<T>(type: ResourceType<T>): number | undefined {
+    return this.values.get(type.id)?.revision
+  }
+}
+
+export const BuiltinResourceTypes = {
+  Time: new ResourceType<{
+    delta: number
+    elapsed: number
+    frameCount: number
+  }>('builtin:Time'),
+  Input: new ResourceType<{
+    keyboard: ReadonlySet<string>
+    mouse: { x: number; y: number; buttons: ReadonlySet<number> }
+    gamepads: readonly unknown[]
+  }>('builtin:Input'),
+  Assets: new ResourceType<unknown>('builtin:Assets'),
+  Renderer: new ResourceType<unknown>('builtin:Renderer'),
+  AudioContext: new ResourceType<unknown>('builtin:AudioContext'),
+  Rng: new ResourceType<() => number>('builtin:Rng'),
+  Config: new ResourceType<Record<string, unknown>>('builtin:Config'),
+  Profiler: new ResourceType<{
+    frameMs: number
+    updateMs: number
+    renderMs: number
+  }>('builtin:Profiler')
+} as const
 
 export interface FieldDefinition {
   name: string
@@ -141,8 +282,9 @@ export class ComponentStore<T> {
   }
 
   *iter(): IterableIterator<[EntityId, T]> {
-    const sorted = [...this.values.entries()].sort((a, b) => a[0] - b[0])
-    for (const [index, stored] of sorted) {
+    const keys = [...this.values.keys()].sort((a, b) => a - b)
+    for (const index of keys) {
+      const stored = this.values.get(index)!
       yield [{ index, generation: stored.generation }, stored.value]
     }
   }
@@ -221,9 +363,7 @@ export class Query<T extends QueryResult = QueryResult> {
       return []
     }
 
-    const entities = [...seedStore.iter()].map(([entity]) => entity)
-    entities.sort((a, b) => a.index - b.index)
-    return entities
+    return [...seedStore.iter()].map(([entity]) => entity)
   }
 
   private matches(entity: EntityId): boolean {
@@ -391,7 +531,7 @@ export class World {
     ComponentType<unknown>,
     ComponentStore<unknown>
   >()
-  readonly resources: ResourceMap = new Map()
+  readonly resources = new ResourceMap()
 
   private changeTick = 0
 
@@ -479,6 +619,26 @@ export class World {
     type: ComponentType<unknown>
   ): number | undefined {
     return this.components.get(type)?.getChangedAt(entity)
+  }
+
+  insertResource<T>(type: ResourceToken<T>, resource: T): void {
+    this.resources.insert(ResourceType.fromToken(type), resource)
+  }
+
+  getResource<T>(type: ResourceToken<T>): T {
+    return this.resources.get(ResourceType.fromToken(type))
+  }
+
+  tryGetResource<T>(type: ResourceToken<T>): T | undefined {
+    return this.resources.tryGet(ResourceType.fromToken(type))
+  }
+
+  removeResource<T>(type: ResourceToken<T>): void {
+    this.resources.remove(ResourceType.fromToken(type))
+  }
+
+  hasResource<T>(type: ResourceToken<T>): boolean {
+    return this.resources.has(ResourceType.fromToken(type))
   }
 
   private ensureStore<TComponent>(

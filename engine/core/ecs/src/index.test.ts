@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest'
-import { type EntityId, World, packageId } from './index'
+import {
+  type EntityId,
+  ResourceMap,
+  ResourceType,
+  World,
+  packageId
+} from './index'
 
 describe('ecs package', () => {
   it('exports stable package id', () => {
@@ -151,5 +157,56 @@ describe('Scale sanity', () => {
       expect(current).toBeDefined()
       expect(previous!.entity.index).toBeLessThan(current!.entity.index)
     }
+  })
+})
+
+describe('ResourceMap', () => {
+  it('inserts and retrieves resources with type keys', () => {
+    const resources = new ResourceMap()
+    const Time = new ResourceType<{ delta: number }>('time')
+
+    resources.insert(Time, { delta: 1 / 60 })
+
+    expect(resources.has(Time)).toBe(true)
+    expect(resources.get(Time)).toEqual({ delta: 1 / 60 })
+  })
+
+  it('throws on missing required resource', () => {
+    const resources = new ResourceMap()
+    const Input = new ResourceType<{ keys: string[] }>('input')
+
+    expect(() => resources.get(Input)).toThrow('not registered')
+    expect(resources.tryGet(Input)).toBeUndefined()
+  })
+
+  it('supports resource dependency validation', () => {
+    const resources = new ResourceMap()
+    const Time = new ResourceType<{ delta: number }>('time', { version: 2 })
+    const Physics = new ResourceType<{ gravity: number }>('physics', {
+      dependencies: [new ResourceType('time', { version: 2 })]
+    })
+
+    expect(() => resources.insert(Physics, { gravity: 9.8 })).toThrow(
+      'depends on missing'
+    )
+
+    resources.insert(Time, { delta: 1 / 120 })
+    resources.insert(Physics, { gravity: 9.8 })
+    expect(resources.get(Physics).gravity).toBe(9.8)
+  })
+
+  it('keeps lookups stable across resource version swaps', () => {
+    const resources = new ResourceMap()
+    const V1 = new ResourceType<{ value: number }>('config', { version: 1 })
+    const V2 = new ResourceType<{ value: number; mode: string }>('config', {
+      version: 2
+    })
+
+    resources.insert(V1, { value: 1 })
+    resources.insert(V2, { value: 2, mode: 'enhanced' })
+
+    expect(resources.get(V1).value).toBe(2)
+    expect(resources.get(V2).mode).toBe('enhanced')
+    expect(resources.getInstalledVersion(V1)).toBe(2)
   })
 })

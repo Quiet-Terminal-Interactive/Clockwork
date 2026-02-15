@@ -5,7 +5,9 @@ export interface CommandBufferLike {
   flush(): void
 }
 
-export type ResourceMapLike = Map<string | symbol, unknown>
+export interface ResourceMapLike {
+  get<T>(type: unknown): T
+}
 
 export interface WorldLike {
   resources: ResourceMapLike
@@ -149,7 +151,11 @@ const BUILTIN_STAGES: Array<{ name: string; allowAsync: boolean }> = [
 
 function createDefaultWorld(): WorldLike {
   return {
-    resources: new Map<string | symbol, unknown>(),
+    resources: {
+      get<T>(): T {
+        throw new Error('No resources are registered in the default world')
+      }
+    },
     commands() {
       return {
         flush() {}

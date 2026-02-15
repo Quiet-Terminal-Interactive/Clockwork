@@ -104,10 +104,10 @@ export class AssetCache {
       return
     }
 
-    entry.inFlight = undefined
+    delete entry.inFlight
     entry.error = undefined
     entry.watchStop?.()
-    entry.watchStop = undefined
+    delete entry.watchStop
     this.unlinkDependencies(entry)
     this.disposeAsset(entry)
     this.entries.delete(id)
@@ -117,7 +117,10 @@ export class AssetCache {
     await this.reloadInternal(id, new Set<AssetId>())
   }
 
-  private async reloadInternal(id: AssetId, visited: Set<AssetId>): Promise<void> {
+  private async reloadInternal(
+    id: AssetId,
+    visited: Set<AssetId>
+  ): Promise<void> {
     if (visited.has(id)) {
       return
     }
@@ -164,11 +167,13 @@ export class AssetCache {
     }
 
     entry.inFlight = (async () => {
-      const loaded = await (loader.load as (
-        path: string,
-        source: AssetSource,
-        context?: LoaderContext
-      ) => Promise<unknown>)(entry.id, this.source, ctx)
+      const loaded = await (
+        loader.load as (
+          path: string,
+          source: AssetSource,
+          context?: LoaderContext
+        ) => Promise<unknown>
+      )(entry.id, this.source, ctx)
       entry.asset = loaded
       entry.error = undefined
       if (!entry.watchStop && this.source.watch) {
@@ -182,7 +187,7 @@ export class AssetCache {
         entry.error = error
       })
       .finally(() => {
-        entry.inFlight = undefined
+        delete entry.inFlight
       })
   }
 
@@ -264,10 +269,17 @@ export class AtlasLoader implements AssetLoader<AtlasAsset> {
     context?: LoaderContext
   ): Promise<AtlasAsset> {
     const bytes = await source.readFile(path)
-    const data = JSON.parse(this.decoder.decode(bytes)) as Record<string, unknown>
+    const data = JSON.parse(this.decoder.decode(bytes)) as Record<
+      string,
+      unknown
+    >
     const texturePath = this.extractTexturePath(data, path)
     if (!texturePath || !context) {
-      return { data, texturePath }
+      const result: AtlasAsset = { data }
+      if (texturePath) {
+        result.texturePath = texturePath
+      }
+      return result
     }
 
     const texture = context.loadDependency(texturePath)

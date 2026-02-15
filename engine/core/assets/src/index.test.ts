@@ -80,10 +80,12 @@ describe('concurrent loading', () => {
     const handles = Array.from({ length: 100 }, (_, i) =>
       cache.load<Uint8Array>(`blob-${i}.bin`)
     )
-    const values = await Promise.all(handles.map((handle) => cache.waitFor(handle)))
+    const values = await Promise.all(
+      handles.map((handle) => cache.waitFor(handle))
+    )
 
     expect(values).toHaveLength(100)
-    expect(values[42][0]).toBe(42)
+    expect(values[42]![0]).toBe(42)
   })
 })
 
@@ -131,8 +133,7 @@ describe('dependency tracking and hot reload', () => {
 
     source.write('sprites/player.png', Uint8Array.of(9, 9, 9))
     source.trigger('sprites/player.png')
-    await Promise.resolve()
-    await Promise.resolve()
+    await new Promise((resolve) => setTimeout(resolve, 0))
 
     const atlasHandleV2 = cache.load<{
       texturePath?: string

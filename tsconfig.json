@@ -1,0 +1,19 @@
+{
+  "files": [],
+  "references": [
+    { "path": "engine/core/app" },
+    { "path": "engine/core/assets" },
+    { "path": "engine/core/audio" },
+    { "path": "engine/core/ecs" },
+    { "path": "engine/core/events" },
+    { "path": "engine/core/input" },
+    { "path": "engine/core/scheduler" },
+    { "path": "engine/core/serialization" },
+    { "path": "engine/platform/tauri-bridge" },
+    { "path": "engine/renderer-webgl2/gl" },
+    { "path": "engine/renderer-webgl2/materials" },
+    { "path": "engine/renderer-webgl2/passes" },
+    { "path": "engine/renderer-webgl2/shaders" },
+    { "path": "apps/tauri-shell/web" }
+  ]
+}

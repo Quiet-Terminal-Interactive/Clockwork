@@ -1,0 +1,13 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "disableSourceOfProjectReferenceRedirect": true,
+    "paths": {
+      "@clockwork/ecs": ["../ecs/dist/index.d.ts"]
+    }
+  },
+  "include": ["src/**/*.ts"],
+  "references": [{ "path": "../ecs" }]
+}

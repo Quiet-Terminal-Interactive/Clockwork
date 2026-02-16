@@ -99,6 +99,23 @@ GitHub Actions runs:
 
 Workflow file: `.github/workflows/ci.yml`
 
+## Publishing
+
+Publish engine packages from repo root:
+
+```bash
+corepack pnpm -r --filter "./engine/**" publish --access public --no-git-checks
+```
+
+Token-based auth (npm):
+
+```bash
+export NPM_TOKEN="..."
+printf "//registry.npmjs.org/:_authToken=${NPM_TOKEN}\n" > .npmrc
+```
+
+Do not commit `.npmrc`.
+
 ## Docs
 
 - `CONTRIBUTING.md`: contribution workflow

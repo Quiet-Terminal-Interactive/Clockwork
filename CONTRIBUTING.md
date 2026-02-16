@@ -65,6 +65,17 @@ corepack pnpm --filter qti-clockwork-app build
 corepack pnpm --filter qti-clockwork-tauri-shell-web dev
 ```
 
+## Release / Publish
+
+- Bump package versions together for coordinated releases.
+- Publish only engine packages:
+
+```bash
+corepack pnpm -r --filter "./engine/**" publish --access public --no-git-checks
+```
+
+- If using token auth, use a local `.npmrc` and never commit it.
+
 ## Reporting Issues
 
 - Use issue reports for bugs and feature requests.

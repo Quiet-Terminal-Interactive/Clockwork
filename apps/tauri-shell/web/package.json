@@ -1,16 +1,16 @@
 {
-  "name": "qti-clockwork-tauri-shell-web",
-  "version": "0.1.0",
-  "private": true,
-  "type": "module",
-  "scripts": {
-    "build": "vite build",
-    "dev": "vite",
-    "test": "vitest run",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
-  },
-  "dependencies": {
-    "qti-clockwork-ecs": "workspace:*"
-  }
+    "name":  "qti-clockwork-tauri-shell-web",
+    "version":  "1.0.0",
+    "private":  true,
+    "type":  "module",
+    "scripts":  {
+                    "build":  "vite build",
+                    "dev":  "vite",
+                    "test":  "vitest run",
+                    "typecheck":  "tsc -p tsconfig.json --noEmit"
+                },
+    "dependencies":  {
+                         "qti-clockwork-ecs":  "workspace:^1.0.0"
+                     }
 }
 

@@ -1,18 +1,29 @@
 {
-  "name": "@clockwork/passes",
-  "version": "0.1.0",
-  "private": true,
-  "type": "module",
-  "main": "dist/index.cjs",
-  "module": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "dependencies": {
-    "@clockwork/gl": "workspace:*",
-    "@clockwork/materials": "workspace:*"
-  },
-  "scripts": {
-    "build": "tsup src/index.ts --format esm,cjs --dts --clean",
-    "test": "vitest run",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
-  }
+    "name":  "@clockwork/passes",
+    "version":  "0.1.0",
+    "type":  "module",
+    "main":  "dist/index.cjs",
+    "module":  "dist/index.js",
+    "types":  "dist/index.d.ts",
+    "dependencies":  {
+                         "@clockwork/gl":  "^0.1.0",
+                         "@clockwork/materials":  "^0.1.0"
+                     },
+    "scripts":  {
+                    "build":  "tsup src/index.ts --format esm,cjs --dts --clean",
+                    "test":  "vitest run",
+                    "typecheck":  "tsc -p tsconfig.json --noEmit",
+                    "prepack":  "npm run build"
+                },
+    "exports":  {
+                    ".":  {
+                              "types":  "./dist/index.d.ts",
+                              "import":  "./dist/index.js",
+                              "require":  "./dist/index.cjs"
+                          }
+                },
+    "files":  [
+                  "dist"
+              ]
 }
+

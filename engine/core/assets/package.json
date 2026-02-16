@@ -9,7 +9,7 @@
                     "build":  "tsup src/index.ts --format esm,cjs --dts --clean",
                     "test":  "vitest run",
                     "typecheck":  "tsc -p tsconfig.json --noEmit",
-                    "prepack":  "npm run build"
+                    "prepack":  "pnpm run build"
                 },
     "exports":  {
                     ".":  {

@@ -9,12 +9,12 @@
                     "build":  "tsup src/index.ts --format esm,cjs --dts --clean",
                     "test":  "vitest run",
                     "typecheck":  "tsc -p tsconfig.json --noEmit",
-                    "prepack":  "npm run build"
+                    "prepack":  "pnpm run build"
                 },
     "dependencies":  {
-                         "@clockwork/ecs":  "^0.1.0",
-                         "@clockwork/events":  "^0.1.0",
-                         "@clockwork/scheduler":  "^0.1.0"
+                         "@clockwork/ecs":  "workspace:^0.1.0",
+                         "@clockwork/events":  "workspace:^0.1.0",
+                         "@clockwork/scheduler":  "workspace:^0.1.0"
                      },
     "exports":  {
                     ".":  {

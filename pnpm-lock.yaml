@@ -51,13 +51,13 @@ importers:
   engine/core/app:
     dependencies:
       '@clockwork/ecs':
-        specifier: workspace:*
+        specifier: workspace:^0.1.0
         version: link:../ecs
       '@clockwork/events':
-        specifier: workspace:*
+        specifier: workspace:^0.1.0
         version: link:../events
       '@clockwork/scheduler':
-        specifier: workspace:*
+        specifier: workspace:^0.1.0
         version: link:../scheduler
 
   engine/core/assets: {}
@@ -75,13 +75,13 @@ importers:
   engine/core/serialization:
     dependencies:
       '@clockwork/ecs':
-        specifier: workspace:*
+        specifier: workspace:^0.1.0
         version: link:../ecs
 
   engine/platform/tauri-bridge:
     dependencies:
       '@clockwork/app':
-        specifier: workspace:*
+        specifier: workspace:^0.1.0
         version: link:../../core/app
 
   engine/renderer-webgl2/gl: {}
@@ -89,19 +89,19 @@ importers:
   engine/renderer-webgl2/materials:
     dependencies:
       '@clockwork/assets':
-        specifier: workspace:*
+        specifier: workspace:^0.1.0
         version: link:../../core/assets
       '@clockwork/gl':
-        specifier: workspace:*
+        specifier: workspace:^0.1.0
         version: link:../gl
 
   engine/renderer-webgl2/passes:
     dependencies:
       '@clockwork/gl':
-        specifier: workspace:*
+        specifier: workspace:^0.1.0
         version: link:../gl
       '@clockwork/materials':
-        specifier: workspace:*
+        specifier: workspace:^0.1.0
         version: link:../materials
 
   engine/renderer-webgl2/shaders: {}

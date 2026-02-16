@@ -6,14 +6,14 @@
     "module":  "dist/index.js",
     "types":  "dist/index.d.ts",
     "dependencies":  {
-                         "@clockwork/gl":  "^0.1.0",
-                         "@clockwork/materials":  "^0.1.0"
+                         "@clockwork/gl":  "workspace:^0.1.0",
+                         "@clockwork/materials":  "workspace:^0.1.0"
                      },
     "scripts":  {
                     "build":  "tsup src/index.ts --format esm,cjs --dts --clean",
                     "test":  "vitest run",
                     "typecheck":  "tsc -p tsconfig.json --noEmit",
-                    "prepack":  "npm run build"
+                    "prepack":  "pnpm run build"
                 },
     "exports":  {
                     ".":  {

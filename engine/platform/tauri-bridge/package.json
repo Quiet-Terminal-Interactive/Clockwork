@@ -9,10 +9,10 @@
                     "build":  "tsup src/index.ts --format esm,cjs --dts --clean",
                     "test":  "vitest run",
                     "typecheck":  "tsc -p tsconfig.json --noEmit",
-                    "prepack":  "npm run build"
+                    "prepack":  "pnpm run build"
                 },
     "dependencies":  {
-                         "@clockwork/app":  "^0.1.0"
+                         "@clockwork/app":  "workspace:^0.1.0"
                      },
     "exports":  {
                     ".":  {

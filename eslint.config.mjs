@@ -12,7 +12,8 @@ export default [
       '**/node_modules/**',
       'apps/tauri-shell/src-tauri/**',
       'apps/tauri-shell/web/vite.config.ts',
-      'vitest.config.ts'
+      'vitest.config.ts',
+      'apps/examples/**'
     ]
   },
   js.configs.recommended,
@@ -29,7 +30,15 @@ export default [
     },
     rules: {
       ...tsPlugin.configs.recommended.rules,
-      'no-undef': 'off'
+      'no-undef': 'off',
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          destructuredArrayIgnorePattern: '^_'
+        }
+      ]
     }
   },
   {

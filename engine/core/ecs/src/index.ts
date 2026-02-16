@@ -180,8 +180,10 @@ export class EntityManager {
   private readonly generations: number[] = []
   private readonly alive: boolean[] = []
   private readonly freeIndices: number[] = []
+  aliveCount = 0
 
   create(): EntityId {
+    this.aliveCount += 1
     const index = this.freeIndices.pop()
     if (index === undefined) {
       const newIndex = this.generations.length
@@ -199,6 +201,7 @@ export class EntityManager {
       return
     }
 
+    this.aliveCount -= 1
     const { index } = entity
     this.alive[index] = false
     this.generations[index] = (this.generations[index]! + 1) >>> 0
@@ -288,6 +291,17 @@ export class ComponentStore<T> {
       yield [{ index, generation: stored.generation }, stored.value]
     }
   }
+
+  sortedEntities(): EntityId[] {
+    const keys = [...this.values.keys()].sort((a, b) => a - b)
+    const result: EntityId[] = new Array(keys.length)
+    for (let i = 0; i < keys.length; i += 1) {
+      const index = keys[i]!
+      const stored = this.values.get(index)!
+      result[i] = { index, generation: stored.generation }
+    }
+    return result
+  }
 }
 
 export interface QueryResult {
@@ -363,7 +377,7 @@ export class Query<T extends QueryResult = QueryResult> {
       return []
     }
 
-    return [...seedStore.iter()].map(([entity]) => entity)
+    return seedStore.sortedEntities()
   }
 
   private matches(entity: EntityId): boolean {
@@ -653,5 +667,49 @@ export class World {
     }
 
     return store
+  }
+}
+
+/** Generic object pool for reducing hot-path allocations. */
+export class ObjectPool<T> {
+  private readonly free: T[] = []
+
+  constructor(
+    private readonly factory: () => T,
+    private readonly reset?: (item: T) => void
+  ) {}
+
+  acquire(): T {
+    return this.free.pop() ?? this.factory()
+  }
+
+  release(item: T): void {
+    this.reset?.(item)
+    this.free.push(item)
+  }
+
+  size(): number {
+    return this.free.length
+  }
+}
+
+export interface WorldStats {
+  entityCount: number
+  componentStoreCount: number
+  componentInstanceCount: number
+}
+
+export function collectWorldStats(world: World): WorldStats {
+  const entityCount = world.entities.aliveCount
+  let componentInstanceCount = 0
+
+  for (const store of world.components.values()) {
+    componentInstanceCount += [...store.iter()].length
+  }
+
+  return {
+    entityCount,
+    componentStoreCount: world.components.size,
+    componentInstanceCount
   }
 }

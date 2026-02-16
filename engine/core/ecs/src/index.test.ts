@@ -1,9 +1,11 @@
 import { describe, expect, it } from 'vitest'
 import {
+  ObjectPool,
   type EntityId,
   ResourceMap,
   ResourceType,
   World,
+  collectWorldStats,
   packageId
 } from './index'
 
@@ -150,13 +152,10 @@ describe('Scale sanity', () => {
     const results = [...world.query().with(Position).iter()]
 
     expect(results).toHaveLength(total)
-    for (let i = 1; i < results.length; i += 1) {
-      const previous = results[i - 1]
-      const current = results[i]
-      expect(previous).toBeDefined()
-      expect(current).toBeDefined()
-      expect(previous!.entity.index).toBeLessThan(current!.entity.index)
-    }
+    const isSorted = results.every(
+      (r, i) => i === 0 || results[i - 1]!.entity.index < r.entity.index
+    )
+    expect(isSorted).toBe(true)
   })
 })
 
@@ -208,5 +207,33 @@ describe('ResourceMap', () => {
     expect(resources.get(V1).value).toBe(2)
     expect(resources.get(V2).mode).toBe('enhanced')
     expect(resources.getInstalledVersion(V1)).toBe(2)
+  })
+})
+
+describe('performance helpers', () => {
+  it('reuses items through object pool', () => {
+    const pool = new ObjectPool(
+      () => ({ value: 0 }),
+      (item) => {
+        item.value = 0
+      }
+    )
+
+    const item = pool.acquire()
+    item.value = 42
+    pool.release(item)
+
+    const reused = pool.acquire()
+    expect(reused.value).toBe(0)
+  })
+
+  it('collects world stats', () => {
+    const world = new World()
+    const Position = Symbol('Position')
+    world.addComponent(world.spawn().build(), Position, { x: 1, y: 2 })
+
+    const stats = collectWorldStats(world)
+    expect(stats.entityCount).toBe(1)
+    expect(stats.componentInstanceCount).toBe(1)
   })
 })

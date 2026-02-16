@@ -256,3 +256,126 @@ export class SystemTimeSource implements TimeSource {
     return Date.now()
   }
 }
+
+export interface TauriInvoker {
+  invoke<T>(command: string, args?: Record<string, unknown>): Promise<T>
+}
+
+/** Tauri command-backed file system implementation. */
+export class TauriFileSystem implements FileSystem {
+  constructor(private readonly tauri: TauriInvoker) {}
+
+  async readFile(path: string): Promise<Uint8Array> {
+    const bytes = await this.tauri.invoke<number[]>('read_file', { path })
+    return new Uint8Array(bytes)
+  }
+
+  async writeFile(path: string, data: Uint8Array): Promise<void> {
+    await this.tauri.invoke('write_file', { path, data: [...data] })
+  }
+
+  async listDir(path: string): Promise<string[]> {
+    return this.tauri.invoke<string[]>('list_dir', { path })
+  }
+
+  watch(path: string, callback: () => void): () => void {
+    // Native file-watch hooks vary by runtime, so we provide polling fallback.
+    let active = true
+
+    const tick = async (): Promise<void> => {
+      if (!active) {
+        return
+      }
+      await this.tauri.invoke('watch_ping', { path })
+      callback()
+      setTimeout(() => void tick(), 1000)
+    }
+
+    void tick()
+
+    return () => {
+      active = false
+    }
+  }
+}
+
+export interface TauriWindowApi {
+  setSize(width: number, height: number): Promise<void> | void
+  setTitle(title: string): Promise<void> | void
+  isFullscreen(): Promise<boolean> | boolean
+  setFullscreen(enabled: boolean): Promise<void> | void
+  close(): Promise<void> | void
+  innerSize():
+    | Promise<{ width: number; height: number }>
+    | { width: number; height: number }
+}
+
+/** Window adapter over Tauri window API surface. */
+export class TauriWindowAdapter implements Window {
+  private size = { width: 1280, height: 720 }
+  private fullscreen = false
+
+  constructor(private readonly api: TauriWindowApi) {}
+
+  getSize(): { width: number; height: number } {
+    return this.size
+  }
+
+  setSize(width: number, height: number): void {
+    this.size = { width, height }
+    void this.api.setSize(width, height)
+  }
+
+  setTitle(title: string): void {
+    void this.api.setTitle(title)
+  }
+
+  isFullscreen(): boolean {
+    return this.fullscreen
+  }
+
+  setFullscreen(enabled: boolean): void {
+    this.fullscreen = enabled
+    void this.api.setFullscreen(enabled)
+  }
+
+  close(): void {
+    void this.api.close()
+  }
+
+  async refreshSize(): Promise<void> {
+    this.size = await this.api.innerSize()
+  }
+
+  async refreshFullscreen(): Promise<void> {
+    this.fullscreen = await this.api.isFullscreen()
+  }
+}
+
+export interface PathProvider {
+  appDataDir(): Promise<string>
+}
+
+export class TauriPathProvider implements PathProvider {
+  constructor(private readonly tauri: TauriInvoker) {}
+
+  async appDataDir(): Promise<string> {
+    return this.tauri.invoke<string>('app_data_dir')
+  }
+}
+
+export interface CrashLogger {
+  log(error: unknown, metadata?: Record<string, unknown>): Promise<void>
+}
+
+export class TauriCrashLogger implements CrashLogger {
+  constructor(private readonly tauri: TauriInvoker) {}
+
+  async log(error: unknown, metadata?: Record<string, unknown>): Promise<void> {
+    await this.tauri.invoke('log_crash', {
+      message: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+      metadata
+    })
+  }
+}

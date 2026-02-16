@@ -4,13 +4,18 @@
     "rootDir": "src",
     "outDir": "dist",
     "disableSourceOfProjectReferenceRedirect": true,
-    "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@clockwork/ecs": ["../ecs/dist/index.d.ts"],
+      "@clockwork/events": ["../events/dist/index.d.ts"],
+      "@clockwork/scheduler": ["../scheduler/dist/index.d.ts"],
+      "@clockwork/tauri-bridge": ["../../platform/tauri-bridge/dist/index.d.ts"]
+    }
   },
   "include": ["src/**/*.ts"],
   "references": [
     { "path": "../ecs" },
     { "path": "../events" },
-    { "path": "../scheduler" }
+    { "path": "../scheduler" },
+    { "path": "../../platform/tauri-bridge" }
   ]
 }

@@ -59,6 +59,9 @@ importers:
       '@clockwork/scheduler':
         specifier: workspace:*
         version: link:../scheduler
+      '@clockwork/tauri-bridge':
+        specifier: workspace:*
+        version: link:../../platform/tauri-bridge
 
   engine/core/assets: {}
 
@@ -72,15 +75,33 @@ importers:
 
   engine/core/scheduler: {}
 
-  engine/core/serialization: {}
+  engine/core/serialization:
+    dependencies:
+      '@clockwork/ecs':
+        specifier: workspace:*
+        version: link:../ecs
 
   engine/platform/tauri-bridge: {}
 
   engine/renderer-webgl2/gl: {}
 
-  engine/renderer-webgl2/materials: {}
+  engine/renderer-webgl2/materials:
+    dependencies:
+      '@clockwork/assets':
+        specifier: workspace:*
+        version: link:../../core/assets
+      '@clockwork/gl':
+        specifier: workspace:*
+        version: link:../gl
 
-  engine/renderer-webgl2/passes: {}
+  engine/renderer-webgl2/passes:
+    dependencies:
+      '@clockwork/gl':
+        specifier: workspace:*
+        version: link:../gl
+      '@clockwork/materials':
+        specifier: workspace:*
+        version: link:../materials
 
   engine/renderer-webgl2/shaders: {}
 

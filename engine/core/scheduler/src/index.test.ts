@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest'
-import { type System, Scheduler, type WorldLike, packageId } from './index'
+import {
+  DeterminismValidator,
+  Profiler,
+  SeededRng,
+  type System,
+  Scheduler,
+  type WorldLike,
+  packageId
+} from './index'
 
 class TestWorld implements WorldLike {
   readonly resources = {
@@ -170,5 +178,40 @@ describe('runIf predicate', () => {
     await scheduler.step(1 / 60)
 
     expect(calls).toBe(0)
+  })
+})
+
+describe('determinism and profiling', () => {
+  it('produces stable seeded rng sequences', () => {
+    const a = new SeededRng(1234)
+    const b = new SeededRng(1234)
+
+    const seqA = [a.next(), a.next(), a.next()]
+    const seqB = [b.next(), b.next(), b.next()]
+    expect(seqA).toEqual(seqB)
+  })
+
+  it('flags async fixed-update systems in determinism report', () => {
+    const scheduler = new Scheduler()
+    scheduler.addSystem(
+      'FixedUpdate',
+      createSystem('bad-fixed', async () => {
+        await Promise.resolve()
+      })
+    )
+
+    const report = new DeterminismValidator(scheduler).report()
+    expect(report.violations.length).toBeGreaterThan(0)
+    expect(report.score).toBeLessThan(100)
+  })
+
+  it('records profiler timings', async () => {
+    const profiler = new Profiler()
+    profiler.begin('update')
+    await Promise.resolve()
+    profiler.end('update')
+
+    expect(profiler.getTimings().get('update')?.samples).toBe(1)
+    expect(profiler.getAverageRuntime('update')).toBeGreaterThanOrEqual(0)
   })
 })

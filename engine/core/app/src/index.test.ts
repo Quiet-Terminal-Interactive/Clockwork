@@ -1,5 +1,14 @@
 import { describe, expect, it } from 'vitest'
-import { AppBuilder, type Plugin, packageId } from './index'
+import {
+  AppBuilder,
+  createDefaultPluginCatalog,
+  EngineInspector,
+  HeadlessRendererPlugin,
+  ModManager,
+  PluginCatalog,
+  type Plugin,
+  packageId
+} from './index'
 
 describe('app package', () => {
   it('exports stable package id', () => {
@@ -94,5 +103,77 @@ describe('Plugin isolation', () => {
 
     builder.use(ownerA).use(ownerB)
     expect(() => builder.build()).toThrow('owned by plugin "owner-a"')
+  })
+})
+
+describe('headless and inspection', () => {
+  it('builds with headless renderer plugin', () => {
+    const app = new AppBuilder().use(HeadlessRendererPlugin).build()
+    expect(app.world.getResource('renderer')).toBeDefined()
+  })
+
+  it('exposes engine inspector metrics', () => {
+    const app = new AppBuilder().build()
+    const inspector = new EngineInspector(app)
+    expect(inspector.world.getEntityCount()).toBe(0)
+    expect(inspector.systems.getStageOrder().length).toBeGreaterThan(0)
+  })
+})
+
+describe('plugin catalog and mods', () => {
+  it('creates plugins from catalog factories', () => {
+    const catalog = new PluginCatalog()
+    catalog.register('sample', () => ({
+      id: 'sample',
+      version: '1.0.0',
+      init() {}
+    }))
+    expect(catalog.create('sample').id).toBe('sample')
+  })
+
+  it('provides default plugin catalog entries', () => {
+    const catalog = createDefaultPluginCatalog()
+    expect(catalog.list()).toEqual(
+      expect.arrayContaining([
+        'physics',
+        'ui',
+        'particle',
+        'tilemap',
+        'networking'
+      ])
+    )
+  })
+
+  it('loads and tracks mods from manifest', async () => {
+    const files = new Map<string, Uint8Array>([
+      [
+        'mods/demo/mod.json',
+        new TextEncoder().encode(
+          JSON.stringify({ id: 'demo', version: '1.0.0', assets: ['a.png'] })
+        )
+      ]
+    ])
+
+    const fs = {
+      async readFile(path: string): Promise<Uint8Array> {
+        const bytes = files.get(path)
+        if (!bytes) {
+          throw new Error('missing')
+        }
+        return bytes
+      },
+      async writeFile() {},
+      async listDir(): Promise<string[]> {
+        return ['demo']
+      },
+      watch(): () => void {
+        return () => {}
+      }
+    }
+
+    const manager = new ModManager(fs, new AppBuilder())
+    const mod = await manager.loadMod('mods/demo')
+    expect(mod.id).toBe('demo')
+    expect(manager.getLoadedMods()).toHaveLength(1)
   })
 })

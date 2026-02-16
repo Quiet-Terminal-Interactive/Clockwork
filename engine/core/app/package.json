@@ -14,6 +14,7 @@
   "dependencies": {
     "@clockwork/ecs": "workspace:*",
     "@clockwork/events": "workspace:*",
-    "@clockwork/scheduler": "workspace:*"
+    "@clockwork/scheduler": "workspace:*",
+    "@clockwork/tauri-bridge": "workspace:*"
   }
 }

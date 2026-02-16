@@ -626,7 +626,7 @@ const atlasHandle = assets.load<Atlas>('sprites/atlas.json')
 
 ---
 
-## Phase 7 – Platform Abstraction Layer
+## ~~Phase 7 – Platform Abstraction Layer~~ COMPLETE
 
 ### Goal
 
@@ -686,7 +686,7 @@ interface TimeSource {
 
 ---
 
-## Phase 8 – Input System
+## ~~Phase 8 – Input System~~ COMPLETE
 
 ### Goal
 
@@ -765,7 +765,7 @@ if (actionMap.isActionPressed('jump')) {
 
 ---
 
-## Phase 9 – WebGL2 Renderer Foundation
+## ~~Phase 9 – WebGL2 Renderer Foundation~~ COMPLETE
 
 ### Goal
 
@@ -826,7 +826,7 @@ class GLState {
 
 ---
 
-## Phase 10 – Shader System
+## ~~Phase 10 – Shader System~~ COMPLETE
 
 ### Goal
 
@@ -909,7 +909,7 @@ Line ${error.line}: ${error.snippet}`)
 
 ---
 
-## Phase 11 – Texture & Atlas System
+## ~~Phase 11 – Texture & Atlas System~~ COMPLETE
 
 ### Goal
 
@@ -1002,7 +1002,7 @@ class TextureLoader implements AssetLoader<Texture> {
 
 ---
 
-## Phase 12 – Camera & Transform System
+## ~~Phase 12 – Camera & Transform System~~ COMPLETE
 
 ### Goal
 
@@ -1089,7 +1089,7 @@ function worldToScreen(camera: Camera2D, worldPos: Vec2): Vec2 {
 
 ---
 
-## Phase 13 – Sprite Batch Renderer
+## ~~Phase 13 – Sprite Batch Renderer~~ COMPLETE
 
 ### Goal
 
@@ -1196,7 +1196,7 @@ function spriteRenderSystem(ctx: SystemContext) {
 
 ---
 
-## Phase 14 – Text Rendering (SDF)
+## ~~Phase 14 – Text Rendering (SDF)~~ COMPLETE
 
 ### Goal
 

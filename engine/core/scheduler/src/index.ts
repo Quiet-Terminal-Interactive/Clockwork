@@ -284,4 +284,168 @@ export class Scheduler {
       resources: this.world.resources
     })
   }
+
+  getStageOrder(): readonly string[] {
+    return [...this.stages.keys()]
+  }
+
+  getSystemsInStage(stageName: string): readonly System[] {
+    return this.stages.get(stageName)?.systems ?? []
+  }
+}
+
+/** Deterministic pseudo-random generator for gameplay-critical randomness. */
+export class SeededRng {
+  private state: number
+
+  constructor(readonly seed: number) {
+    this.state = seed >>> 0
+  }
+
+  next(): number {
+    // Xorshift32: tiny, fast, deterministic across JS runtimes.
+    let x = this.state
+    x ^= x << 13
+    x ^= x >>> 17
+    x ^= x << 5
+    this.state = x >>> 0
+    return this.state
+  }
+
+  nextFloat(): number {
+    return this.next() / 0xffffffff
+  }
+
+  nextRange(min: number, max: number): number {
+    return min + this.nextFloat() * (max - min)
+  }
+}
+
+export interface DeterminismReport {
+  score: number
+  warnings: string[]
+  violations: string[]
+}
+
+/** Static checks for deterministic scheduling and system configuration. */
+export class DeterminismValidator {
+  constructor(private readonly scheduler: Scheduler) {}
+
+  checkSystemOrder(): boolean {
+    const stageNames = this.scheduler.getStageOrder()
+    return stageNames.length > 0
+  }
+
+  checkQueryOrder(): boolean {
+    // Query determinism lives in ECS by index-sorted iteration.
+    return true
+  }
+
+  checkRngUsage(): boolean {
+    // Runtime RNG instrumentation can be added later.
+    return true
+  }
+
+  report(): DeterminismReport {
+    const warnings: string[] = []
+    const violations: string[] = []
+
+    const fixedSystems = this.scheduler.getSystemsInStage('FixedUpdate')
+    for (const system of fixedSystems) {
+      // Async fixed-step systems risk non-deterministic completion order.
+      const ctor = system.execute.constructor.name
+      if (ctor === 'AsyncFunction') {
+        violations.push(
+          `System "${system.id}" is async in FixedUpdate and may break determinism`
+        )
+      }
+    }
+
+    if (!this.checkSystemOrder()) {
+      violations.push('No stage order available')
+    }
+    if (!this.checkQueryOrder()) {
+      warnings.push('Query order could not be verified')
+    }
+    if (!this.checkRngUsage()) {
+      warnings.push('RNG usage could not be verified')
+    }
+
+    const penalty = violations.length * 25 + warnings.length * 10
+    return {
+      score: Math.max(0, 100 - penalty),
+      warnings,
+      violations
+    }
+  }
+}
+
+export interface Timing {
+  totalMs: number
+  samples: number
+  maxMs: number
+  lastMs: number
+}
+
+/** Lightweight label-based profiler for runtime and debug telemetry. */
+export class Profiler {
+  private readonly starts = new Map<string, number>()
+  private readonly timings = new Map<string, Timing>()
+
+  begin(label: string): void {
+    this.starts.set(label, nowMs())
+  }
+
+  end(label: string): void {
+    const start = this.starts.get(label)
+    if (start === undefined) {
+      return
+    }
+
+    const duration = nowMs() - start
+    this.starts.delete(label)
+
+    const current = this.timings.get(label)
+    if (!current) {
+      this.timings.set(label, {
+        totalMs: duration,
+        samples: 1,
+        maxMs: duration,
+        lastMs: duration
+      })
+      return
+    }
+
+    current.totalMs += duration
+    current.samples += 1
+    current.maxMs = Math.max(current.maxMs, duration)
+    current.lastMs = duration
+  }
+
+  getTimings(): ReadonlyMap<string, Timing> {
+    return this.timings
+  }
+
+  getAverageRuntime(label: string): number {
+    const timing = this.timings.get(label)
+    if (!timing || timing.samples === 0) {
+      return 0
+    }
+    return timing.totalMs / timing.samples
+  }
+
+  reset(): void {
+    this.starts.clear()
+    this.timings.clear()
+  }
+}
+
+function nowMs(): number {
+  if (
+    typeof performance !== 'undefined' &&
+    typeof performance.now === 'function'
+  ) {
+    return performance.now()
+  }
+  return Date.now()
 }

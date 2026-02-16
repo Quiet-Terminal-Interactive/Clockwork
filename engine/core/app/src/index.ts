@@ -1,7 +1,9 @@
 /** App builder and plugin lifecycle orchestration. */
 import { type ComponentSchema, type ResourceToken, World } from '@clockwork/ecs'
 import { EventBus } from '@clockwork/events'
-import { Scheduler, type System } from '@clockwork/scheduler'
+import { Profiler, Scheduler, type System } from '@clockwork/scheduler'
+// eslint-disable-next-line no-restricted-imports -- type-only import; FileSystem interface should eventually move to a core package
+import type { FileSystem } from '@clockwork/tauri-bridge'
 
 export const packageId = '@clockwork/app'
 
@@ -364,4 +366,282 @@ export class AppBuilder {
     this.resources.setActiveOwner(pluginId)
     this.assets.setActiveOwner(pluginId)
   }
+}
+
+export interface Renderer {
+  init(): void
+  render(): void
+  shutdown(): void
+}
+
+/** Renderer stub for tests, servers, and logic-only simulation. */
+export class HeadlessRenderer implements Renderer {
+  init(): void {}
+  render(): void {}
+  shutdown(): void {}
+}
+
+export const HeadlessRendererPlugin: Plugin = {
+  id: 'headless-renderer',
+  version: '1.0.0',
+  init(app) {
+    app.resources.insert('renderer', new HeadlessRenderer())
+  }
+}
+
+export interface RuntimeStats {
+  avgMs: number
+  samples: number
+  maxMs: number
+  lastMs: number
+}
+
+/** Introspection over world entities and component density. */
+export class WorldInspector {
+  constructor(private readonly world: World) {}
+
+  getEntityCount(): number {
+    return this.world.entities.aliveCount
+  }
+
+  getComponentCounts(): Map<string, number> {
+    const counts = new Map<string, number>()
+    for (const [type, store] of this.world.components.entries()) {
+      counts.set(normalizeTypeName(type), [...store.iter()].length)
+    }
+    return counts
+  }
+
+  dumpEntities(): Array<{
+    entity: { index: number; generation: number }
+    components: Record<string, unknown>
+  }> {
+    const result: Array<{
+      entity: { index: number; generation: number }
+      components: Record<string, unknown>
+    }> = []
+
+    for (const entity of this.world.entities.iterAlive()) {
+      const components: Record<string, unknown> = {}
+      for (const [type, store] of this.world.components.entries()) {
+        const value = store.get(entity)
+        if (value !== undefined) {
+          components[normalizeTypeName(type)] = value
+        }
+      }
+      result.push({ entity, components })
+    }
+
+    return result
+  }
+}
+
+/** Scheduler-level inspection and runtime telemetry access. */
+export class SystemInspector {
+  constructor(
+    private readonly scheduler: Scheduler,
+    private readonly profiler: Profiler
+  ) {}
+
+  getStageOrder(): string[] {
+    return [...this.scheduler.getStageOrder()]
+  }
+
+  getSystemRuntime(systemId: string): RuntimeStats | undefined {
+    const timing = this.profiler.getTimings().get(systemId)
+    if (!timing) {
+      return undefined
+    }
+    return {
+      avgMs: timing.totalMs / timing.samples,
+      samples: timing.samples,
+      maxMs: timing.maxMs,
+      lastMs: timing.lastMs
+    }
+  }
+
+  getAverageRuntime(systemId: string): number {
+    return this.profiler.getAverageRuntime(systemId)
+  }
+}
+
+/** Asset bookkeeping for memory and lifecycle diagnostics. */
+export class AssetInspector {
+  private readonly tracked = new Map<string, { bytes: number; refs: number }>()
+
+  track(id: string, bytes: number): void {
+    const current = this.tracked.get(id) ?? { bytes: 0, refs: 0 }
+    current.bytes = bytes
+    current.refs += 1
+    this.tracked.set(id, current)
+  }
+
+  untrack(id: string): void {
+    const current = this.tracked.get(id)
+    if (!current) {
+      return
+    }
+    current.refs -= 1
+    if (current.refs <= 0) {
+      this.tracked.delete(id)
+    }
+  }
+
+  getMemoryUsage(): number {
+    let total = 0
+    for (const item of this.tracked.values()) {
+      total += item.bytes
+    }
+    return total
+  }
+
+  dump(): Record<string, { bytes: number; refs: number }> {
+    return Object.fromEntries(this.tracked)
+  }
+}
+
+/** Unified debug API surface for headless and desktop diagnostics. */
+export class EngineInspector {
+  readonly world: WorldInspector
+  readonly systems: SystemInspector
+  readonly assets: AssetInspector
+  readonly profiler: Profiler
+
+  constructor(
+    app: App,
+    profiler = new Profiler(),
+    assets = new AssetInspector()
+  ) {
+    this.profiler = profiler
+    this.assets = assets
+    this.world = new WorldInspector(app.world)
+    this.systems = new SystemInspector(app.scheduler, profiler)
+  }
+}
+
+export type PluginFactory = () => Plugin
+
+export class PluginCatalog {
+  private readonly factories = new Map<string, PluginFactory>()
+
+  register(name: string, factory: PluginFactory): void {
+    this.factories.set(name, factory)
+  }
+
+  create(name: string): Plugin {
+    const factory = this.factories.get(name)
+    if (!factory) {
+      throw new Error(`Unknown plugin factory "${name}"`)
+    }
+    return factory()
+  }
+
+  list(): string[] {
+    return [...this.factories.keys()].sort()
+  }
+}
+
+function createStubPlugin(id: string): Plugin {
+  return {
+    id,
+    version: '0.1.0',
+    init() {}
+  }
+}
+
+export const PhysicsPlugin = (): Plugin => createStubPlugin('physics')
+export const UIPlugin = (): Plugin => createStubPlugin('ui')
+export const ParticlePlugin = (): Plugin => createStubPlugin('particle')
+export const TilemapPlugin = (): Plugin => createStubPlugin('tilemap')
+export const NetworkingPlugin = (): Plugin => createStubPlugin('networking')
+
+export function createDefaultPluginCatalog(): PluginCatalog {
+  const catalog = new PluginCatalog()
+  catalog.register('physics', PhysicsPlugin)
+  catalog.register('ui', UIPlugin)
+  catalog.register('particle', ParticlePlugin)
+  catalog.register('tilemap', TilemapPlugin)
+  catalog.register('networking', NetworkingPlugin)
+  return catalog
+}
+
+export interface ModManifest {
+  id: string
+  version: string
+  entry?: string
+  assets?: string[]
+}
+
+export interface Mod {
+  id: string
+  version: string
+  assets: string[]
+  init(app: AppBuilder): void
+}
+
+/** Loads mods from disk manifests and applies them as plugins. */
+export class ModManager {
+  private readonly mods = new Map<string, Mod>()
+  private readonly watchers = new Map<string, () => void>()
+  private readonly decoder = new TextDecoder()
+
+  constructor(
+    private readonly fs: FileSystem,
+    private readonly builder: AppBuilder
+  ) {}
+
+  async discoverMods(path: string): Promise<string[]> {
+    return this.fs.listDir(path)
+  }
+
+  async loadMod(path: string): Promise<Mod> {
+    const bytes = await this.fs.readFile(`${path}/mod.json`)
+    const manifest = JSON.parse(this.decoder.decode(bytes)) as ModManifest
+
+    const mod: Mod = {
+      id: manifest.id,
+      version: manifest.version,
+      assets: manifest.assets ?? [],
+      init: () => {}
+    }
+
+    this.mods.set(mod.id, mod)
+    this.builder.use({
+      id: `mod:${mod.id}`,
+      version: mod.version,
+      init: (app) => mod.init(app)
+    })
+    return mod
+  }
+
+  unloadMod(modId: string): void {
+    this.mods.delete(modId)
+    this.watchers.get(modId)?.()
+    this.watchers.delete(modId)
+  }
+
+  async reloadMod(modId: string, path: string): Promise<void> {
+    this.unloadMod(modId)
+    await this.loadMod(path)
+  }
+
+  watchMod(modId: string, path: string, onReload: () => void): void {
+    this.watchers.get(modId)?.()
+    const stop = this.fs.watch(path, onReload)
+    this.watchers.set(modId, stop)
+  }
+
+  getLoadedMods(): Mod[] {
+    return [...this.mods.values()]
+  }
+}
+
+function normalizeTypeName(type: RegistryType<unknown>): string {
+  if (typeof type === 'string') {
+    return type
+  }
+  if (typeof type === 'symbol') {
+    return type.description ?? 'symbol'
+  }
+  return type.name || 'anonymous'
 }

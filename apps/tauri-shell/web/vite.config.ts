@@ -9,9 +9,10 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ['@clockwork/ecs']
+          vendor: ['qti-clockwork-ecs']
         }
       }
     }
   }
 })
+

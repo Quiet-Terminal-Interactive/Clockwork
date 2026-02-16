@@ -1,4 +1,4 @@
-import { packageId as ecsPackageId } from '@clockwork/ecs'
+import { packageId as ecsPackageId } from 'qti-clockwork-ecs'
 
 const root = document.querySelector<HTMLDivElement>('#app')
 
@@ -7,3 +7,4 @@ if (!root) {
 }
 
 root.textContent = `Clockwork shell booting with ${ecsPackageId}`
+

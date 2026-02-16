@@ -16,7 +16,7 @@ import {
 
 describe('tauri-bridge package', () => {
   it('exports stable package id', () => {
-    expect(packageId).toBe('@clockwork/tauri-bridge')
+    expect(packageId).toBe('qti-clockwork-tauri-bridge')
   })
 })
 
@@ -292,3 +292,4 @@ describe('runtime config loader', () => {
     expect(telemetryMessages[2]).toMatch(/^error:/)
   })
 })
+

@@ -1,4 +1,4 @@
-export const packageId = '@clockwork/events'
+export const packageId = 'qti-clockwork-events'
 
 export type EventConstructor<T> = new (...args: never[]) => T
 export type EventType<T> = string | symbol | EventConstructor<T>
@@ -159,3 +159,4 @@ export class InputEvent {
     readonly action: 'pressed' | 'released'
   ) {}
 }
+

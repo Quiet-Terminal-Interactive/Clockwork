@@ -1,5 +1,5 @@
 {
-  "name": "@clockwork/tauri-shell-web",
+  "name": "qti-clockwork-tauri-shell-web",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -10,6 +10,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@clockwork/ecs": "workspace:*"
+    "qti-clockwork-ecs": "workspace:*"
   }
 }
+

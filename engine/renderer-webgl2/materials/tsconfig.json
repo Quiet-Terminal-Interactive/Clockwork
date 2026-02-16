@@ -5,10 +5,11 @@
     "outDir": "dist",
     "disableSourceOfProjectReferenceRedirect": true,
     "paths": {
-      "@clockwork/assets": ["../../core/assets/dist/index.d.ts"],
-      "@clockwork/gl": ["../gl/dist/index.d.ts"]
+      "qti-clockwork-assets": ["../../core/assets/dist/index.d.ts"],
+      "qti-clockwork-gl": ["../gl/dist/index.d.ts"]
     }
   },
   "include": ["src/**/*.ts"],
   "references": [{ "path": "../../core/assets" }, { "path": "../gl" }]
 }
+

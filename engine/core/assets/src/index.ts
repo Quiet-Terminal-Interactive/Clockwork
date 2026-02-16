@@ -1,4 +1,4 @@
-export const packageId = '@clockwork/assets'
+export const packageId = 'qti-clockwork-assets'
 
 export type AssetId = string
 
@@ -482,3 +482,4 @@ function assertSafeRelativeSegment(path: string): string {
   }
   return normalized
 }
+

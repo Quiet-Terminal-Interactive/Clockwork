@@ -5,8 +5,8 @@
     "outDir": "dist",
     "disableSourceOfProjectReferenceRedirect": true,
     "paths": {
-      "@clockwork/gl": ["../gl/dist/index.d.ts"],
-      "@clockwork/materials": ["../materials/dist/index.d.ts"]
+      "qti-clockwork-gl": ["../gl/dist/index.d.ts"],
+      "qti-clockwork-materials": ["../materials/dist/index.d.ts"]
     }
   },
   "include": ["src/**/*.ts"],
@@ -16,3 +16,4 @@
     { "path": "../materials" }
   ]
 }
+

@@ -49,7 +49,7 @@ function createSystem(
 
 describe('scheduler package', () => {
   it('exports stable package id', () => {
-    expect(packageId).toBe('@clockwork/scheduler')
+    expect(packageId).toBe('qti-clockwork-scheduler')
   })
 })
 
@@ -249,3 +249,4 @@ describe('determinism and profiling', () => {
     await expect(scheduler.step(Number.NaN)).rejects.toThrow('finite')
   })
 })
+

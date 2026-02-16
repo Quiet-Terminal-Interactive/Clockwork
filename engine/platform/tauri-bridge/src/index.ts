@@ -6,7 +6,7 @@ import {
   type LogMetadata,
   type Logger,
   type RuntimeConfig
-} from '@clockwork/app'
+} from 'qti-clockwork-app'
 
 export {
   ConsoleLogger,
@@ -18,7 +18,7 @@ export {
   type RuntimeConfig
 }
 
-export const packageId = '@clockwork/tauri-bridge'
+export const packageId = 'qti-clockwork-tauri-bridge'
 
 /** Fan-out logger for composing multiple sinks. */
 export class CompositeLogger implements Logger {
@@ -679,3 +679,4 @@ function getProcessEnv(): ConfigEnvironment {
   }
   return processLike.env
 }
+

@@ -17,19 +17,20 @@
     "composite": true,
     "baseUrl": ".",
     "paths": {
-      "@clockwork/app": ["engine/core/app/src/index.ts"],
-      "@clockwork/assets": ["engine/core/assets/src/index.ts"],
-      "@clockwork/audio": ["engine/core/audio/src/index.ts"],
-      "@clockwork/ecs": ["engine/core/ecs/src/index.ts"],
-      "@clockwork/events": ["engine/core/events/src/index.ts"],
-      "@clockwork/input": ["engine/core/input/src/index.ts"],
-      "@clockwork/scheduler": ["engine/core/scheduler/src/index.ts"],
-      "@clockwork/serialization": ["engine/core/serialization/src/index.ts"],
-      "@clockwork/tauri-bridge": ["engine/platform/tauri-bridge/src/index.ts"],
-      "@clockwork/gl": ["engine/renderer-webgl2/gl/src/index.ts"],
-      "@clockwork/materials": ["engine/renderer-webgl2/materials/src/index.ts"],
-      "@clockwork/passes": ["engine/renderer-webgl2/passes/src/index.ts"],
-      "@clockwork/shaders": ["engine/renderer-webgl2/shaders/src/index.ts"]
+      "qti-clockwork-app": ["engine/core/app/src/index.ts"],
+      "qti-clockwork-assets": ["engine/core/assets/src/index.ts"],
+      "qti-clockwork-audio": ["engine/core/audio/src/index.ts"],
+      "qti-clockwork-ecs": ["engine/core/ecs/src/index.ts"],
+      "qti-clockwork-events": ["engine/core/events/src/index.ts"],
+      "qti-clockwork-input": ["engine/core/input/src/index.ts"],
+      "qti-clockwork-scheduler": ["engine/core/scheduler/src/index.ts"],
+      "qti-clockwork-serialization": ["engine/core/serialization/src/index.ts"],
+      "qti-clockwork-tauri-bridge": ["engine/platform/tauri-bridge/src/index.ts"],
+      "qti-clockwork-gl": ["engine/renderer-webgl2/gl/src/index.ts"],
+      "qti-clockwork-materials": ["engine/renderer-webgl2/materials/src/index.ts"],
+      "qti-clockwork-passes": ["engine/renderer-webgl2/passes/src/index.ts"],
+      "qti-clockwork-shaders": ["engine/renderer-webgl2/shaders/src/index.ts"]
     }
   }
 }
+

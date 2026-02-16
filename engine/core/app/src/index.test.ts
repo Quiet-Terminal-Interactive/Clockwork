@@ -12,7 +12,7 @@ import {
 
 describe('app package', () => {
   it('exports stable package id', () => {
-    expect(packageId).toBe('@clockwork/app')
+    expect(packageId).toBe('qti-clockwork-app')
   })
 })
 
@@ -265,3 +265,4 @@ describe('plugin catalog and mods', () => {
     await expect(manager.loadMod('mods/bad')).rejects.toThrow('unsafe asset')
   })
 })
+

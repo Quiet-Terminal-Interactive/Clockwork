@@ -44,19 +44,19 @@ importers:
 
   apps/tauri-shell/web:
     dependencies:
-      '@clockwork/ecs':
+      'qti-clockwork-ecs':
         specifier: workspace:*
         version: link:../../../engine/core/ecs
 
   engine/core/app:
     dependencies:
-      '@clockwork/ecs':
+      'qti-clockwork-ecs':
         specifier: workspace:^0.1.0
         version: link:../ecs
-      '@clockwork/events':
+      'qti-clockwork-events':
         specifier: workspace:^0.1.0
         version: link:../events
-      '@clockwork/scheduler':
+      'qti-clockwork-scheduler':
         specifier: workspace:^0.1.0
         version: link:../scheduler
 
@@ -74,13 +74,13 @@ importers:
 
   engine/core/serialization:
     dependencies:
-      '@clockwork/ecs':
+      'qti-clockwork-ecs':
         specifier: workspace:^0.1.0
         version: link:../ecs
 
   engine/platform/tauri-bridge:
     dependencies:
-      '@clockwork/app':
+      'qti-clockwork-app':
         specifier: workspace:^0.1.0
         version: link:../../core/app
 
@@ -88,19 +88,19 @@ importers:
 
   engine/renderer-webgl2/materials:
     dependencies:
-      '@clockwork/assets':
+      'qti-clockwork-assets':
         specifier: workspace:^0.1.0
         version: link:../../core/assets
-      '@clockwork/gl':
+      'qti-clockwork-gl':
         specifier: workspace:^0.1.0
         version: link:../gl
 
   engine/renderer-webgl2/passes:
     dependencies:
-      '@clockwork/gl':
+      'qti-clockwork-gl':
         specifier: workspace:^0.1.0
         version: link:../gl
-      '@clockwork/materials':
+      'qti-clockwork-materials':
         specifier: workspace:^0.1.0
         version: link:../materials
 
@@ -2471,3 +2471,4 @@ snapshots:
   word-wrap@1.2.5: {}
 
   yocto-queue@0.1.0: {}
+

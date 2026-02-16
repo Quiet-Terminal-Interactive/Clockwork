@@ -1,4 +1,4 @@
-export const packageId = '@clockwork/audio'
+export const packageId = 'qti-clockwork-audio'
 
 export interface AudioBufferLike {
   duration: number
@@ -274,3 +274,4 @@ export class HeadlessAudioContext implements AudioContextLike {
     return { duration: bytes / 48000 }
   }
 }
+

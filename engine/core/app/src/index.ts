@@ -1,8 +1,8 @@
-import { type ComponentSchema, type ResourceToken, World } from '@clockwork/ecs'
-import { EventBus } from '@clockwork/events'
-import { Profiler, Scheduler, type System } from '@clockwork/scheduler'
+import { type ComponentSchema, type ResourceToken, World } from 'qti-clockwork-ecs'
+import { EventBus } from 'qti-clockwork-events'
+import { Profiler, Scheduler, type System } from 'qti-clockwork-scheduler'
 
-export const packageId = '@clockwork/app'
+export const packageId = 'qti-clockwork-app'
 
 export type LogLevel = 'debug' | 'info' | 'warn' | 'error'
 
@@ -841,3 +841,4 @@ function normalizeTypeName(type: RegistryType<unknown>): string {
   }
   return type.name || 'anonymous'
 }
+

@@ -3,7 +3,7 @@ import { AudioEngine, HeadlessAudioContext, packageId } from './index'
 
 describe('audio package', () => {
   it('exports stable package id', () => {
-    expect(packageId).toBe('@clockwork/audio')
+    expect(packageId).toBe('qti-clockwork-audio')
   })
 
   it('plays and stops clips through buses', async () => {
@@ -42,3 +42,4 @@ describe('audio package', () => {
     expect(() => engine.setMasterVolume(1)).toThrow('disposed')
   })
 })
+

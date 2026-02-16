@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import type { Texture } from '@clockwork/materials'
+import type { Texture } from 'qti-clockwork-materials'
 import {
   PrimitiveBatch,
   RenderGraph,
@@ -33,7 +33,7 @@ function makeCamera(): Camera2D {
 
 describe('passes package', () => {
   it('exports stable package id', () => {
-    expect(packageId).toBe('@clockwork/passes')
+    expect(packageId).toBe('qti-clockwork-passes')
   })
 
   it('computes hierarchical world transforms', () => {
@@ -299,3 +299,4 @@ describe('passes package', () => {
     expect(() => graph.execute()).toThrow('requires compile')
   })
 })
+

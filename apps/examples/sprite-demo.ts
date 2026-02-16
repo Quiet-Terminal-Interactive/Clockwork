@@ -1,4 +1,4 @@
-import { SpriteBatch, type Camera2D } from '@clockwork/passes'
+import { SpriteBatch, type Camera2D } from 'qti-clockwork-passes'
 
 export function buildSpriteDemo(batch = new SpriteBatch()): number {
   const camera: Camera2D = {
@@ -12,3 +12,4 @@ export function buildSpriteDemo(batch = new SpriteBatch()): number {
   batch.begin(camera)
   return batch.end().drawCalls
 }
+

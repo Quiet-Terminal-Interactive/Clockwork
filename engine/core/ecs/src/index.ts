@@ -1,4 +1,4 @@
-export const packageId = '@clockwork/ecs'
+export const packageId = 'qti-clockwork-ecs'
 
 /** Unique handle to a living entity, invalidated on destroy via generation bump. */
 export interface EntityId {
@@ -705,3 +705,4 @@ export function collectWorldStats(world: World): WorldStats {
     componentInstanceCount
   }
 }
+

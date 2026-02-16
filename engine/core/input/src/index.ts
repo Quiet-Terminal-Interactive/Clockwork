@@ -1,4 +1,4 @@
-export const packageId = '@clockwork/input'
+export const packageId = 'qti-clockwork-input'
 
 export interface Vec2 {
   x: number
@@ -268,3 +268,4 @@ export class ActionMap {
     }
   }
 }
+

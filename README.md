@@ -6,9 +6,9 @@ Clockwork is a TypeScript-first, modular game engine workspace focused on ECS-dr
 
 Implemented in this repository:
 - Core runtime packages: ECS, scheduler, events, serialization, assets, audio, app/plugin runtime
-- WebGL2 renderer packages: `@clockwork/gl`, `@clockwork/shaders`, `@clockwork/materials`, `@clockwork/passes`
-- Platform integration package: `@clockwork/tauri-bridge`
-- Web shell app: `@clockwork/tauri-shell-web`
+- WebGL2 renderer packages: `qti-clockwork-gl`, `qti-clockwork-shaders`, `qti-clockwork-materials`, `qti-clockwork-passes`
+- Platform integration package: `qti-clockwork-tauri-bridge`
+- Web shell app: `qti-clockwork-tauri-shell-web`
 
 Planned but not fully implemented yet:
 - Fixed-point determinism math module
@@ -73,15 +73,15 @@ corepack pnpm format:check
 Run one package:
 
 ```bash
-corepack pnpm --filter @clockwork/ecs test
-corepack pnpm --filter @clockwork/ecs build
-corepack pnpm --filter @clockwork/tauri-shell-web dev
+corepack pnpm --filter qti-clockwork-ecs test
+corepack pnpm --filter qti-clockwork-ecs build
+corepack pnpm --filter qti-clockwork-tauri-shell-web dev
 ```
 
 ## Minimal API Example
 
 ```ts
-import { AppBuilder, HeadlessRendererPlugin } from '@clockwork/app'
+import { AppBuilder, HeadlessRendererPlugin } from 'qti-clockwork-app'
 
 const app = new AppBuilder().use(HeadlessRendererPlugin).build()
 app.run()

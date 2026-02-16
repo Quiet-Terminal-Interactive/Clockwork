@@ -50,11 +50,11 @@ export default [
         'error',
         {
           patterns: [
-            '@clockwork/tauri-bridge',
-            '@clockwork/gl',
-            '@clockwork/materials',
-            '@clockwork/passes',
-            '@clockwork/shaders',
+            'qti-clockwork-tauri-bridge',
+            'qti-clockwork-gl',
+            'qti-clockwork-materials',
+            'qti-clockwork-passes',
+            'qti-clockwork-shaders',
             '**/engine/platform/**',
             '**/engine/renderer-webgl2/**'
           ]
@@ -64,3 +64,4 @@ export default [
   },
   prettier
 ]
+

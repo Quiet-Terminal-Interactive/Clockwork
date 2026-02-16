@@ -1,4 +1,4 @@
-export const packageId = '@clockwork/gl'
+export const packageId = 'qti-clockwork-gl'
 
 export type BlendMode = 'opaque' | 'alpha' | 'additive'
 /** WebGL2 rendering context lifecycle manager with viewport and draw call helpers. */
@@ -143,3 +143,4 @@ export class GLState {
     this.gl.useProgram(program)
   }
 }
+

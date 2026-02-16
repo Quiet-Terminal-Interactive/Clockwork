@@ -3,7 +3,7 @@ import { ActionMap, InputManager, packageId } from './index'
 
 describe('input package', () => {
   it('exports stable package id', () => {
-    expect(packageId).toBe('@clockwork/input')
+    expect(packageId).toBe('qti-clockwork-input')
   })
 })
 
@@ -61,3 +61,4 @@ describe('action map', () => {
     expect(actions.getActionValue('moveX')).toBeCloseTo(0.5)
   })
 })
+

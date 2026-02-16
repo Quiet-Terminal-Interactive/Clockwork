@@ -11,7 +11,7 @@ import {
 
 describe('ecs package', () => {
   it('exports stable package id', () => {
-    expect(packageId).toBe('@clockwork/ecs')
+    expect(packageId).toBe('qti-clockwork-ecs')
   })
 })
 
@@ -237,3 +237,4 @@ describe('performance helpers', () => {
     expect(stats.componentInstanceCount).toBe(1)
   })
 })
+

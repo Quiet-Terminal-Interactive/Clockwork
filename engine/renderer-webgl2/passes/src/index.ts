@@ -1,7 +1,7 @@
-import type { BlendMode } from '@clockwork/gl'
-import type { AtlasRegion, Texture } from '@clockwork/materials'
+import type { BlendMode } from 'qti-clockwork-gl'
+import type { AtlasRegion, Texture } from 'qti-clockwork-materials'
 
-export const packageId = '@clockwork/passes'
+export const packageId = 'qti-clockwork-passes'
 
 export interface Vec2 {
   x: number
@@ -912,3 +912,4 @@ function assertValidZoom(zoom: number): void {
     throw new Error('Camera zoom must be a finite, non-zero number')
   }
 }
+

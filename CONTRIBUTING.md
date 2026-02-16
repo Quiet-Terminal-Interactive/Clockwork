@@ -60,9 +60,9 @@ corepack pnpm format
 Run commands against a single workspace package:
 
 ```bash
-corepack pnpm --filter @clockwork/ecs test
-corepack pnpm --filter @clockwork/app build
-corepack pnpm --filter @clockwork/tauri-shell-web dev
+corepack pnpm --filter qti-clockwork-ecs test
+corepack pnpm --filter qti-clockwork-app build
+corepack pnpm --filter qti-clockwork-tauri-shell-web dev
 ```
 
 ## Reporting Issues
@@ -75,3 +75,4 @@ corepack pnpm --filter @clockwork/tauri-shell-web dev
 
 - Community behavior expectations: `CODE_OF_CONDUCT.md`
 - Security reporting process: `SECURITY.md`
+

@@ -1,6 +1,6 @@
-import { type ComponentType, World } from '@clockwork/ecs'
+import { type ComponentType, World } from 'qti-clockwork-ecs'
 
-export const packageId = '@clockwork/serialization'
+export const packageId = 'qti-clockwork-serialization'
 
 export interface ComponentSerializationSchema<T = unknown> {
   version: number
@@ -236,3 +236,4 @@ function assertSerializedComponent(
     throw new Error(`Serialized component "${item.type}" has invalid "version"`)
   }
 }
+

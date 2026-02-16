@@ -5,9 +5,9 @@
     "outDir": "dist",
     "disableSourceOfProjectReferenceRedirect": true,
     "paths": {
-      "@clockwork/ecs": ["../ecs/dist/index.d.ts"],
-      "@clockwork/events": ["../events/dist/index.d.ts"],
-      "@clockwork/scheduler": ["../scheduler/dist/index.d.ts"]
+      "qti-clockwork-ecs": ["../ecs/dist/index.d.ts"],
+      "qti-clockwork-events": ["../events/dist/index.d.ts"],
+      "qti-clockwork-scheduler": ["../scheduler/dist/index.d.ts"]
     }
   },
   "include": ["src/**/*.ts"],
@@ -17,3 +17,4 @@
     { "path": "../scheduler" }
   ]
 }
+

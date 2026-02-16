@@ -57,7 +57,7 @@ const source = {
 
 describe('materials package', () => {
   it('exports stable package id', () => {
-    expect(packageId).toBe('@clockwork/materials')
+    expect(packageId).toBe('qti-clockwork-materials')
   })
 
   it('creates atlas regions with normalized UVs', () => {
@@ -133,3 +133,4 @@ describe('materials package', () => {
     )
   })
 })
+

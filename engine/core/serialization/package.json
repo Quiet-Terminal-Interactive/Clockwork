@@ -1,5 +1,5 @@
 {
-    "name":  "@clockwork/serialization",
+    "name":  "qti-clockwork-serialization",
     "version":  "0.1.0",
     "type":  "module",
     "main":  "dist/index.cjs",
@@ -12,7 +12,7 @@
                     "prepack":  "pnpm run build"
                 },
     "dependencies":  {
-                         "@clockwork/ecs":  "workspace:^0.1.0"
+                         "qti-clockwork-ecs":  "workspace:^0.1.0"
                      },
     "exports":  {
                     ".":  {
@@ -25,4 +25,5 @@
                   "dist"
               ]
 }
+
 

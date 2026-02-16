@@ -1,7 +1,7 @@
-import type { AssetLoader, AssetSource } from '@clockwork/assets'
-import type { GLState } from '@clockwork/gl'
+import type { AssetLoader, AssetSource } from 'qti-clockwork-assets'
+import type { GLState } from 'qti-clockwork-gl'
 
-export const packageId = '@clockwork/materials'
+export const packageId = 'qti-clockwork-materials'
 
 export type FilterMode = 'nearest' | 'linear'
 
@@ -315,3 +315,4 @@ function asFiniteNumber(value: unknown): number | undefined {
   }
   return value
 }
+

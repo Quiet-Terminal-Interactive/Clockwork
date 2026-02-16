@@ -1,5 +1,5 @@
 {
-    "name":  "@clockwork/app",
+    "name":  "qti-clockwork-app",
     "version":  "0.1.0",
     "type":  "module",
     "main":  "dist/index.cjs",
@@ -12,9 +12,9 @@
                     "prepack":  "pnpm run build"
                 },
     "dependencies":  {
-                         "@clockwork/ecs":  "workspace:^0.1.0",
-                         "@clockwork/events":  "workspace:^0.1.0",
-                         "@clockwork/scheduler":  "workspace:^0.1.0"
+                         "qti-clockwork-ecs":  "workspace:^0.1.0",
+                         "qti-clockwork-events":  "workspace:^0.1.0",
+                         "qti-clockwork-scheduler":  "workspace:^0.1.0"
                      },
     "exports":  {
                     ".":  {
@@ -27,4 +27,5 @@
                   "dist"
               ]
 }
+
 

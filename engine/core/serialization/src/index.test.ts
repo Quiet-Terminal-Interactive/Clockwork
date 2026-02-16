@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest'
-import { World } from '@clockwork/ecs'
+import { World } from 'qti-clockwork-ecs'
 import { WorldSerializer, packageId } from './index'
 
 const Position = Symbol('Position')
 
 describe('serialization package', () => {
   it('exports stable package id', () => {
-    expect(packageId).toBe('@clockwork/serialization')
+    expect(packageId).toBe('qti-clockwork-serialization')
   })
 
   it('serializes and deserializes world entities', () => {
@@ -160,3 +160,4 @@ describe('serialization package', () => {
     ).not.toThrow()
   })
 })
+

@@ -9,7 +9,7 @@ import {
 
 describe('events package', () => {
   it('exports stable package id', () => {
-    expect(packageId).toBe('@clockwork/events')
+    expect(packageId).toBe('qti-clockwork-events')
   })
 })
 
@@ -73,3 +73,4 @@ describe('type channels', () => {
     expect(first).toEqual({ target: 7, amount: 25 })
   })
 })
+

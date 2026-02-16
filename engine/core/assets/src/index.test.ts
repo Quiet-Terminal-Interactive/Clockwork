@@ -62,7 +62,7 @@ function bytes(value: string): Uint8Array {
 
 describe('assets package', () => {
   it('exports stable package id', () => {
-    expect(packageId).toBe('@clockwork/assets')
+    expect(packageId).toBe('qti-clockwork-assets')
   })
 })
 
@@ -225,3 +225,4 @@ describe('unload behavior', () => {
     expect(() => cache.load('../secrets.json')).toThrow('traversal')
   })
 })
+

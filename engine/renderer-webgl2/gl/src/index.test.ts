@@ -42,7 +42,7 @@ function createMockGL(): WebGL2RenderingContext {
 
 describe('gl package', () => {
   it('exports stable package id', () => {
-    expect(packageId).toBe('@clockwork/gl')
+    expect(packageId).toBe('qti-clockwork-gl')
   })
 })
 
@@ -116,3 +116,4 @@ describe('gl state cache', () => {
     expect(calls.activeTexture).toBe(1)
   })
 })
+

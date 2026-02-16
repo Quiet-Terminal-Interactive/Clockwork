@@ -1,13 +1,13 @@
 {
-    "name":  "@clockwork/passes",
+    "name":  "qti-clockwork-passes",
     "version":  "0.1.0",
     "type":  "module",
     "main":  "dist/index.cjs",
     "module":  "dist/index.js",
     "types":  "dist/index.d.ts",
     "dependencies":  {
-                         "@clockwork/gl":  "workspace:^0.1.0",
-                         "@clockwork/materials":  "workspace:^0.1.0"
+                         "qti-clockwork-gl":  "workspace:^0.1.0",
+                         "qti-clockwork-materials":  "workspace:^0.1.0"
                      },
     "scripts":  {
                     "build":  "tsup src/index.ts --format esm,cjs --dts --clean",
@@ -26,4 +26,5 @@
                   "dist"
               ]
 }
+
 

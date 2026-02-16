@@ -1,5 +1,5 @@
 {
-    "name":  "@clockwork/tauri-bridge",
+    "name":  "qti-clockwork-tauri-bridge",
     "version":  "0.1.0",
     "type":  "module",
     "main":  "dist/index.cjs",
@@ -12,7 +12,7 @@
                     "prepack":  "pnpm run build"
                 },
     "dependencies":  {
-                         "@clockwork/app":  "workspace:^0.1.0"
+                         "qti-clockwork-app":  "workspace:^0.1.0"
                      },
     "exports":  {
                     ".":  {
@@ -25,4 +25,5 @@
                   "dist"
               ]
 }
+
 

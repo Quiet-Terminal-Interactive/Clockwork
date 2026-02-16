@@ -57,7 +57,7 @@ function createMockShaderGL(): WebGL2RenderingContext {
 
 describe('shaders package', () => {
   it('exports stable package id', () => {
-    expect(packageId).toBe('@clockwork/shaders')
+    expect(packageId).toBe('qti-clockwork-shaders')
   })
 })
 
@@ -158,3 +158,4 @@ describe('shader compiler', () => {
     expect(shader).toBeTruthy()
   })
 })
+

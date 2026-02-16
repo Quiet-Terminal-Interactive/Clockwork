@@ -1,4 +1,4 @@
-export const packageId = '@clockwork/scheduler'
+export const packageId = 'qti-clockwork-scheduler'
 
 export interface CommandBufferLike {
   flush(): void
@@ -456,3 +456,4 @@ function nowMs(): number {
   }
   return Date.now()
 }
+

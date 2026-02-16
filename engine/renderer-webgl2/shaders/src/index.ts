@@ -1,4 +1,4 @@
-export const packageId = '@clockwork/shaders'
+export const packageId = 'qti-clockwork-shaders'
 
 const INCLUDE_PATTERN = /^\s*#include\s+"([^"]+)"\s*$/gm
 
@@ -247,3 +247,4 @@ export class ShaderCompiler {
     throw new Error(`Shader compile failed: ${this.error}`)
   }
 }
+

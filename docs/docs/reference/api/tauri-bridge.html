@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Clockwork is a TypeScript-first, modular game engine workspace focused on ECS-driven runtime systems and a WebGL2 renderer stack.">
+    <title>API Reference: qti-clockwork-tauri-bridge — Clockwork</title>
+    <link rel="stylesheet" href="https://clockwork.quietterminal.co.uk/qtidocs.css">
+</head>
+
+<body>
+    <div class="particles" id="particles"></div>
+
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>
+                    <img src="https://cdn.quietterminal.co.uk/6,19416eb58d" alt="Clockwork Logo">
+                    <a href="../index.html">Clockwork</a>
+                </h2>
+                <p class="sidebar-tagline">Clockwork is a TypeScript-first, modular game engine workspace focused on ECS-driven runtime systems and a WebGL2 renderer stack.</p>
+            </div>
+            <nav class="sidebar-nav">
+                <ul><li class='folder'><span class='folder-name'>architecture</span><ul><li><a href='/docs/architecture/determinism.html'>Determinism</a></li><li><a href='/docs/architecture/overview.html'>Overview</a></li><li><a href='/docs/architecture/plugin-system.html'>Plugin System</a></li><li><a href='/docs/architecture/runtime-lifecycle.html'>Runtime Lifecycle</a></li><li><a href='/docs/architecture/sequences.html'>Sequences</a></li></ul></li><li class='folder'><span class='folder-name'>core</span><ul><li class='folder'><span class='folder-name'>assets</span><ul><li><a href='/docs/core/assets/asset-cache.html'>Asset Cache</a></li></ul></li><li class='folder'><span class='folder-name'>audio</span><ul><li><a href='/docs/core/audio/audio-engine.html'>Audio Engine</a></li></ul></li><li class='folder'><span class='folder-name'>ecs</span><ul><li><a href='/docs/core/ecs/commands.html'>Commands</a></li><li><a href='/docs/core/ecs/components.html'>Components</a></li><li><a href='/docs/core/ecs/entities.html'>Entities</a></li><li><a href='/docs/core/ecs/overview.html'>Overview</a></li><li><a href='/docs/core/ecs/queries.html'>Queries</a></li><li><a href='/docs/core/ecs/resources.html'>Resources</a></li></ul></li><li class='folder'><span class='folder-name'>events</span><ul><li><a href='/docs/core/events/event-bus.html'>Event Bus</a></li></ul></li><li class='folder'><span class='folder-name'>input</span><ul><li><a href='/docs/core/input/input-manager.html'>Input Manager</a></li></ul></li><li class='folder'><span class='folder-name'>scheduler</span><ul><li><a href='/docs/core/scheduler/stages.html'>Stages</a></li><li><a href='/docs/core/scheduler/systems.html'>Systems</a></li><li><a href='/docs/core/scheduler/time.html'>Time</a></li></ul></li><li class='folder'><span class='folder-name'>serialization</span><ul><li><a href='/docs/core/serialization/world-serializer.html'>World Serializer</a></li></ul></li></ul></li><li><a href='/docs/faq.html'>Faq</a></li><li><a href='/docs/getting-started.html'>Getting Started</a></li><li class='folder'><span class='folder-name'>guides</span><ul><li><a href='/docs/guides/create-first-plugin.html'>Create First Plugin</a></li><li class='folder'><span class='folder-name'>decisions</span><ul><li><a href='/docs/guides/decisions/assets.html'>Assets</a></li><li><a href='/docs/guides/decisions/ecs-queries.html'>Ecs Queries</a></li><li><a href='/docs/guides/decisions/rendering.html'>Rendering</a></li><li><a href='/docs/guides/decisions/scheduler-stages.html'>Scheduler Stages</a></li></ul></li><li><a href='/docs/guides/gotchas.html'>Gotchas</a></li><li><a href='/docs/guides/mod-manifests.html'>Mod Manifests</a></li></ul></li><li><a href='/docs/index.html'>Index</a></li><li><a href='/docs/installation.html'>Installation</a></li><li><a href='/docs/packages.html'>Packages</a></li><li class='folder'><span class='folder-name'>platform</span><ul><li><a href='/docs/platform/tauri-bridge.html'>Tauri Bridge</a></li></ul></li><li><a href='/docs/quickstart.html'>Quickstart</a></li><li class='folder'><span class='folder-name'>reference</span><ul><li class='folder'><span class='folder-name'>api</span><ul><li><a href='/docs/reference/api/app.html'>App</a></li><li><a href='/docs/reference/api/assets.html'>Assets</a></li><li><a href='/docs/reference/api/audio.html'>Audio</a></li><li><a href='/docs/reference/api/ecs.html'>Ecs</a></li><li><a href='/docs/reference/api/events.html'>Events</a></li><li><a href='/docs/reference/api/gl.html'>Gl</a></li><li><a href='/docs/reference/api/index.html'>Index</a></li><li><a href='/docs/reference/api/input.html'>Input</a></li><li><a href='/docs/reference/api/materials.html'>Materials</a></li><li><a href='/docs/reference/api/passes.html'>Passes</a></li><li><a href='/docs/reference/api/scheduler.html'>Scheduler</a></li><li><a href='/docs/reference/api/serialization.html'>Serialization</a></li><li><a href='/docs/reference/api/shaders.html'>Shaders</a></li><li><a href='/docs/reference/api/tauri-bridge.html' class='active'>Tauri Bridge</a></li></ul></li><li><a href='/docs/reference/api-map.html'>Api Map</a></li><li><a href='/docs/reference/configuration-reference.html'>Configuration Reference</a></li><li class='folder'><span class='folder-name'>errors</span><ul><li><a href='/docs/reference/errors/core.html'>Core</a></li><li><a href='/docs/reference/errors/index.html'>Index</a></li><li><a href='/docs/reference/errors/platform.html'>Platform</a></li><li><a href='/docs/reference/errors/renderer.html'>Renderer</a></li></ul></li><li class='folder'><span class='folder-name'>examples</span><ul><li><a href='/docs/reference/examples/assets.html'>Assets</a></li><li><a href='/docs/reference/examples/ecs.html'>Ecs</a></li><li><a href='/docs/reference/examples/index.html'>Index</a></li><li><a href='/docs/reference/examples/renderer.html'>Renderer</a></li><li><a href='/docs/reference/examples/runtime.html'>Runtime</a></li><li><a href='/docs/reference/examples/scheduler.html'>Scheduler</a></li><li><a href='/docs/reference/examples/tauri-bridge.html'>Tauri Bridge</a></li></ul></li><li><a href='/docs/reference/packages.html'>Packages</a></li></ul></li><li class='folder'><span class='folder-name'>renderer</span><ul><li><a href='/docs/renderer/gl.html'>Gl</a></li><li><a href='/docs/renderer/materials.html'>Materials</a></li><li><a href='/docs/renderer/passes.html'>Passes</a></li><li><a href='/docs/renderer/shaders.html'>Shaders</a></li></ul></li><li><a href='/docs/runtime.html'>Runtime</a></li><li><a href='/docs/testing.html'>Testing</a></li></ul>
+            </nav>
+            <div class="sidebar-footer">
+                <a class="github-link" href="https://github.com/quiet-terminal-interactive/clockwork" target="_blank">
+                    <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor">
+                        <path
+                            d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" />
+                    </svg>
+                    View on GitHub
+                </a>
+            </div>
+        </aside>
+
+        <main class="content">
+            <header class="hero hide-hero">
+                <img class="hero-logo" src="https://cdn.quietterminal.co.uk/6,19416eb58d" alt="Clcokwork Logo">
+                <h1>Clockwork</h1>
+                <p>Clockwork is a TypeScript-first, modular game engine workspace focused on ECS-driven runtime systems and a WebGL2 renderer stack.</p>
+                <div class="button-group">
+                    <a class="ghbutton" href="https://github.com/quiet-terminal-interactive/clockwork" target="_blank">View on GitHub</a>
+                    <a class="learnmore" href="getting-started.html">Get Started</a>
+                </div>
+            </header>
+
+            <nav class="breadcrumbs" aria-label="Breadcrumb">
+                <a href='../index.html'>Clockwork</a><span class='separator'>/</span><span>Reference</span><span class='separator'>/</span><span>Api</span><span class='separator'>/</span><span class='current'>Tauri Bridge</span>
+            </nav>
+
+            <div class="doc-layout">
+                <article class="doc-content">
+                    <h1 class="page-title">API Reference: qti-clockwork-tauri-bridge</h1>
+                    <h1 id="api-reference-qti-clockwork-tauri-bridge">API Reference: qti-clockwork-tauri-bridge</h1>
+<h2 id="filesystem-adapters">Filesystem Adapters</h2>
+<h3 id="memoryfilesystem">MemoryFileSystem</h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>readFile/writeFile</code></td>
+<td>In-memory byte IO with copies for safety.</td>
+</tr>
+<tr>
+<td><code>listDir</code></td>
+<td>Lists one directory segment under prefix.</td>
+</tr>
+<tr>
+<td><code>watch</code></td>
+<td>Path-keyed callback registration with unsubscribe.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="browserfilesystem">BrowserFileSystem</h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>readFile</code></td>
+<td>Fetch-based read to <code>Uint8Array</code>.</td>
+</tr>
+<tr>
+<td><code>writeFile</code></td>
+<td>Optional writer; throws when unavailable.</td>
+</tr>
+<tr>
+<td><code>listDir</code></td>
+<td>Optional lister; throws when unavailable.</td>
+</tr>
+<tr>
+<td><code>watch</code></td>
+<td>Optional watcher; no-op unsubscribe fallback.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="taurifilesystem">TauriFileSystem</h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>readFile</code></td>
+<td>Calls <code>read_file</code>, validates byte payload [0..255].</td>
+</tr>
+<tr>
+<td><code>writeFile</code></td>
+<td>Calls <code>write_file</code> with numeric byte array.</td>
+</tr>
+<tr>
+<td><code>listDir</code></td>
+<td>Calls <code>list_dir</code>, validates string array payload.</td>
+</tr>
+<tr>
+<td><code>watch</code></td>
+<td>Polls <code>watch_ping</code> every second; warns on transient failures.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="window-adapters">Window Adapters</h2>
+<ul>
+<li><code>HeadlessWindow</code></li>
+<li><code>BrowserWindowAdapter</code></li>
+<li><code>TauriWindowAdapter</code></li>
+</ul>
+<p>Key methods: <code>getSize</code>, <code>setSize</code>, <code>setTitle</code>, <code>isFullscreen</code>, <code>setFullscreen</code>, <code>close</code>.</p>
+<h2 id="logging-and-config">Logging and Config</h2>
+<h3 id="loggers">Loggers</h3>
+<ul>
+<li><code>ConsoleLogger</code></li>
+<li><code>CompositeLogger</code></li>
+<li><code>CrashReportingLogger</code></li>
+<li><code>TauriCrashLogger</code></li>
+</ul>
+<h3 id="runtimeconfigloader">RuntimeConfigLoader</h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>loadFromFile</code></td>
+<td>Reads JSON, validates runtime config shape and path safety.</td>
+</tr>
+<tr>
+<td><code>loadFromEnv</code></td>
+<td>Parses prefixed env vars into partial runtime config.</td>
+</tr>
+<tr>
+<td><code>merge</code></td>
+<td>Merges defaults with provided partial sources (later wins).</td>
+</tr>
+</tbody>
+</table>
+<h2 id="gotchas">Gotchas</h2>
+<ul>
+<li>Tauri watch is polling-based by default, not native file watcher events.</li>
+<li>Crash telemetry submission failures escalate log level after repeated failures.</li>
+<li>Config path fields reject traversal (<code>..</code>) from both file and env sources.</li>
+</ul>
+
+                    <div class="page-meta">
+                        <span class="last-modified">Last updated: February 16, 2026</span>
+                    </div>
+                </article>
+
+                <nav class='toc'><h4>On This Page</h4><ul><li style='margin-left:0px'><a href='#filesystem-adapters'>Filesystem Adapters</a></li><li style='margin-left:20px'><a href='#memoryfilesystem'>MemoryFileSystem</a></li><li style='margin-left:20px'><a href='#browserfilesystem'>BrowserFileSystem</a></li><li style='margin-left:20px'><a href='#taurifilesystem'>TauriFileSystem</a></li><li style='margin-left:0px'><a href='#window-adapters'>Window Adapters</a></li><li style='margin-left:0px'><a href='#logging-and-config'>Logging and Config</a></li><li style='margin-left:20px'><a href='#loggers'>Loggers</a></li><li style='margin-left:20px'><a href='#runtimeconfigloader'>RuntimeConfigLoader</a></li><li style='margin-left:0px'><a href='#gotchas'>Gotchas</a></li></ul></nav>
+            </div>
+
+            <footer class="doc-footer">
+                <div class="footer-content">
+                    <div class="alpha-banner">Theme colours designed by MothDebugged.</div>
+                    <div class="footer-links">
+                        <a href="https://github.com/quiet-terminal-interactive/clockwork/issues" target="_blank">Report Issue</a>
+                        <span class="separator">•</span>
+                        <a href="https://github.com/quiet-terminal-interactive/clockwork/blob/main/LICENSE" target="_blank">License</a>
+                        <span class="separator">•</span>
+                        <a href="https://github.com/quiet-terminal-interactive/clockwork" target="_blank">Contribute</a>
+                    </div>
+                </div>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.toc a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                });
+            });
+
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    const id = entry.target.getAttribute('id');
+                    if (entry.isIntersecting) {
+                        document.querySelectorAll('.toc a').forEach(link => {
+                            link.classList.remove('active');
+                        });
+                        const activeLink = document.querySelector(`.toc a[href="#${id}"]`);
+                        if (activeLink) {
+                            activeLink.classList.add('active');
+                        }
+                    }
+                });
+            }, { rootMargin: '-20% 0px -80% 0px' });
+
+            document.querySelectorAll('h2[id], h3[id]').forEach(heading => {
+                observer.observe(heading);
+            });
+        });
+    </script>
+</body>
+
+</html>

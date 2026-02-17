@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Clockwork is a TypeScript-first, modular game engine workspace focused on ECS-driven runtime systems and a WebGL2 renderer stack.">
+    <title>Frequently Asked Questions — Clockwork</title>
+    <link rel="stylesheet" href="https://clockwork.quietterminal.co.uk/qtidocs.css">
+</head>
+
+<body>
+    <div class="particles" id="particles"></div>
+
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>
+                    <img src="https://cdn.quietterminal.co.uk/6,19416eb58d" alt="Clockwork Logo">
+                    <a href="../index.html">Clockwork</a>
+                </h2>
+                <p class="sidebar-tagline">Clockwork is a TypeScript-first, modular game engine workspace focused on ECS-driven runtime systems and a WebGL2 renderer stack.</p>
+            </div>
+            <nav class="sidebar-nav">
+                <ul><li class='folder'><span class='folder-name'>architecture</span><ul><li><a href='/docs/architecture/determinism.html'>Determinism</a></li><li><a href='/docs/architecture/overview.html'>Overview</a></li><li><a href='/docs/architecture/plugin-system.html'>Plugin System</a></li><li><a href='/docs/architecture/runtime-lifecycle.html'>Runtime Lifecycle</a></li><li><a href='/docs/architecture/sequences.html'>Sequences</a></li></ul></li><li class='folder'><span class='folder-name'>core</span><ul><li class='folder'><span class='folder-name'>assets</span><ul><li><a href='/docs/core/assets/asset-cache.html'>Asset Cache</a></li></ul></li><li class='folder'><span class='folder-name'>audio</span><ul><li><a href='/docs/core/audio/audio-engine.html'>Audio Engine</a></li></ul></li><li class='folder'><span class='folder-name'>ecs</span><ul><li><a href='/docs/core/ecs/commands.html'>Commands</a></li><li><a href='/docs/core/ecs/components.html'>Components</a></li><li><a href='/docs/core/ecs/entities.html'>Entities</a></li><li><a href='/docs/core/ecs/overview.html'>Overview</a></li><li><a href='/docs/core/ecs/queries.html'>Queries</a></li><li><a href='/docs/core/ecs/resources.html'>Resources</a></li></ul></li><li class='folder'><span class='folder-name'>events</span><ul><li><a href='/docs/core/events/event-bus.html'>Event Bus</a></li></ul></li><li class='folder'><span class='folder-name'>input</span><ul><li><a href='/docs/core/input/input-manager.html'>Input Manager</a></li></ul></li><li class='folder'><span class='folder-name'>scheduler</span><ul><li><a href='/docs/core/scheduler/stages.html'>Stages</a></li><li><a href='/docs/core/scheduler/systems.html'>Systems</a></li><li><a href='/docs/core/scheduler/time.html'>Time</a></li></ul></li><li class='folder'><span class='folder-name'>serialization</span><ul><li><a href='/docs/core/serialization/world-serializer.html'>World Serializer</a></li></ul></li></ul></li><li><a href='/docs/faq.html' class='active'>Faq</a></li><li><a href='/docs/getting-started.html'>Getting Started</a></li><li class='folder'><span class='folder-name'>guides</span><ul><li><a href='/docs/guides/create-first-plugin.html'>Create First Plugin</a></li><li class='folder'><span class='folder-name'>decisions</span><ul><li><a href='/docs/guides/decisions/assets.html'>Assets</a></li><li><a href='/docs/guides/decisions/ecs-queries.html'>Ecs Queries</a></li><li><a href='/docs/guides/decisions/rendering.html'>Rendering</a></li><li><a href='/docs/guides/decisions/scheduler-stages.html'>Scheduler Stages</a></li></ul></li><li><a href='/docs/guides/gotchas.html'>Gotchas</a></li><li><a href='/docs/guides/mod-manifests.html'>Mod Manifests</a></li></ul></li><li><a href='/docs/index.html'>Index</a></li><li><a href='/docs/installation.html'>Installation</a></li><li><a href='/docs/packages.html'>Packages</a></li><li class='folder'><span class='folder-name'>platform</span><ul><li><a href='/docs/platform/tauri-bridge.html'>Tauri Bridge</a></li></ul></li><li><a href='/docs/quickstart.html'>Quickstart</a></li><li class='folder'><span class='folder-name'>reference</span><ul><li class='folder'><span class='folder-name'>api</span><ul><li><a href='/docs/reference/api/app.html'>App</a></li><li><a href='/docs/reference/api/assets.html'>Assets</a></li><li><a href='/docs/reference/api/audio.html'>Audio</a></li><li><a href='/docs/reference/api/ecs.html'>Ecs</a></li><li><a href='/docs/reference/api/events.html'>Events</a></li><li><a href='/docs/reference/api/gl.html'>Gl</a></li><li><a href='/docs/reference/api/index.html'>Index</a></li><li><a href='/docs/reference/api/input.html'>Input</a></li><li><a href='/docs/reference/api/materials.html'>Materials</a></li><li><a href='/docs/reference/api/passes.html'>Passes</a></li><li><a href='/docs/reference/api/scheduler.html'>Scheduler</a></li><li><a href='/docs/reference/api/serialization.html'>Serialization</a></li><li><a href='/docs/reference/api/shaders.html'>Shaders</a></li><li><a href='/docs/reference/api/tauri-bridge.html'>Tauri Bridge</a></li></ul></li><li><a href='/docs/reference/api-map.html'>Api Map</a></li><li><a href='/docs/reference/configuration-reference.html'>Configuration Reference</a></li><li class='folder'><span class='folder-name'>errors</span><ul><li><a href='/docs/reference/errors/core.html'>Core</a></li><li><a href='/docs/reference/errors/index.html'>Index</a></li><li><a href='/docs/reference/errors/platform.html'>Platform</a></li><li><a href='/docs/reference/errors/renderer.html'>Renderer</a></li></ul></li><li class='folder'><span class='folder-name'>examples</span><ul><li><a href='/docs/reference/examples/assets.html'>Assets</a></li><li><a href='/docs/reference/examples/ecs.html'>Ecs</a></li><li><a href='/docs/reference/examples/index.html'>Index</a></li><li><a href='/docs/reference/examples/renderer.html'>Renderer</a></li><li><a href='/docs/reference/examples/runtime.html'>Runtime</a></li><li><a href='/docs/reference/examples/scheduler.html'>Scheduler</a></li><li><a href='/docs/reference/examples/tauri-bridge.html'>Tauri Bridge</a></li></ul></li><li><a href='/docs/reference/packages.html'>Packages</a></li></ul></li><li class='folder'><span class='folder-name'>renderer</span><ul><li><a href='/docs/renderer/gl.html'>Gl</a></li><li><a href='/docs/renderer/materials.html'>Materials</a></li><li><a href='/docs/renderer/passes.html'>Passes</a></li><li><a href='/docs/renderer/shaders.html'>Shaders</a></li></ul></li><li><a href='/docs/runtime.html'>Runtime</a></li><li><a href='/docs/testing.html'>Testing</a></li></ul>
+            </nav>
+            <div class="sidebar-footer">
+                <a class="github-link" href="https://github.com/quiet-terminal-interactive/clockwork" target="_blank">
+                    <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor">
+                        <path
+                            d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" />
+                    </svg>
+                    View on GitHub
+                </a>
+            </div>
+        </aside>
+
+        <main class="content">
+            <header class="hero hide-hero">
+                <img class="hero-logo" src="https://cdn.quietterminal.co.uk/6,19416eb58d" alt="Clcokwork Logo">
+                <h1>Clockwork</h1>
+                <p>Clockwork is a TypeScript-first, modular game engine workspace focused on ECS-driven runtime systems and a WebGL2 renderer stack.</p>
+                <div class="button-group">
+                    <a class="ghbutton" href="https://github.com/quiet-terminal-interactive/clockwork" target="_blank">View on GitHub</a>
+                    <a class="learnmore" href="getting-started.html">Get Started</a>
+                </div>
+            </header>
+
+            <nav class="breadcrumbs" aria-label="Breadcrumb">
+                <a href='../index.html'>Clockwork</a><span class='separator'>/</span><span class='current'>Faq</span>
+            </nav>
+
+            <div class="doc-layout">
+                <article class="doc-content">
+                    <h1 class="page-title">Frequently Asked Questions</h1>
+                    <h1 id="frequently-asked-questions">Frequently Asked Questions</h1>
+<h2 id="general-questions">General Questions</h2>
+<h3 id="what-is-clockwork">What is Clockwork?</h3>
+<p>Clockwork is a TypeScript/JavaScript-first modular game engine package ecosystem with ECS runtime systems, a deterministic scheduler, and a WebGL2 renderer stack.</p>
+<h3 id="is-clockwork-production-ready">Is Clockwork production-ready?</h3>
+<p>Core packages are implemented and tested. Some roadmap modules (for example full physics/particle systems) are still stubs.</p>
+<h3 id="which-package-manager-can-i-use">Which package manager can I use?</h3>
+<p>Any standard JS package manager works (<code>npm</code>, <code>pnpm</code>, <code>yarn</code>, or <code>bun</code>).</p>
+<h3 id="what-node-version-is-expected">What Node version is expected?</h3>
+<p>Node.js 22.x.</p>
+<h2 id="usage-questions">Usage Questions</h2>
+<h3 id="which-package-should-i-start-with">Which package should I start with?</h3>
+<p>Start with <code>qti-clockwork-app</code>. Add <code>qti-clockwork-ecs</code> and <code>qti-clockwork-scheduler</code> for most runtime use cases.</p>
+<h3 id="how-do-i-add-clockwork-to-my-project">How do I add Clockwork to my project?</h3>
+<p>Install packages directly:</p>
+<pre class="highlight"><code class="language-bash">npm i qti-clockwork-app
+</code></pre>
+
+<p>Add additional <code>qti-clockwork-*</code> packages as needed by your app.</p>
+<h3 id="how-do-i-run-my-app-locally">How do I run my app locally?</h3>
+<p>Use your project's normal run command (<code>npm run dev</code>, <code>npm start</code>, etc.).</p>
+<h3 id="how-do-i-run-tests">How do I run tests?</h3>
+<p>Use your project's test command (commonly <code>npm test</code>).</p>
+<h2 id="architecture-questions">Architecture Questions</h2>
+<h3 id="what-does-qti-clockwork-app-provide">What does <code>qti-clockwork-app</code> provide?</h3>
+<p><code>AppBuilder</code>, plugin orchestration, registry ownership boundaries, and runtime assembly (<code>World</code> + <code>Scheduler</code> + plugins).</p>
+<h3 id="how-does-the-scheduler-work">How does the scheduler work?</h3>
+<p>It runs staged updates (<code>Boot</code> through <code>Shutdown</code>) and performs fixed-step sub-stepping in <code>FixedUpdate</code>.</p>
+<h3 id="is-determinism-considered">Is determinism considered?</h3>
+<p>Yes. The scheduler package includes <code>SeededRng</code> and a <code>DeterminismValidator</code> to surface common determinism risks.</p>
+<h3 id="can-i-use-only-one-package">Can I use only one package?</h3>
+<p>Yes. Packages are modular and can be consumed independently where dependencies allow.</p>
+<h2 id="tooling-questions">Tooling Questions</h2>
+<h3 id="how-are-typescript-and-javascript-configured-across-packages">How are TypeScript and JavaScript configured across packages?</h3>
+<p>Clockwork packages ship typings and JS-compatible builds. Your project's <code>tsconfig.json</code> (if using TS) and runtime module settings control behavior.</p>
+<h3 id="why-are-there-alias-mappings-in-typescriptjavascript-tooling-and-vitest">Why are there alias mappings in TypeScript/JavaScript tooling and Vitest?</h3>
+<p>If you use local aliases in your app, mirror them in your test runner config. This applies to both TS and JS projects.</p>
+<h3 id="what-formatterlinter-rules-should-i-follow">What formatter/linter rules should I follow?</h3>
+<p>Prettier with single quotes/no semicolons/trailing comma none, plus ESLint (<code>@typescript-eslint</code> when using TS, standard ESLint rules for JS-only projects).</p>
+<h3 id="does-ci-run-the-same-checks-locally-available">Does CI run the same checks locally available?</h3>
+<p>In the Clockwork source repository, yes. In your app, define CI checks that match your local scripts.</p>
+<h2 id="contribution-questions">Contribution Questions</h2>
+<h3 id="where-are-contribution-guidelines">Where are contribution guidelines?</h3>
+<p><code>CONTRIBUTING.md</code></p>
+<h3 id="where-should-i-report-security-issues">Where should I report security issues?</h3>
+<p><code>SECURITY.md</code></p>
+<h3 id="is-there-a-code-of-conduct">Is there a code of conduct?</h3>
+<p>Yes, see <code>CODE_OF_CONDUCT.md</code>.</p>
+<h3 id="is-this-project-mit-licensed">Is this project MIT licensed?</h3>
+<p>Yes. See <code>LICENSE</code>.</p>
+
+                    <div class="page-meta">
+                        <span class="last-modified">Last updated: February 17, 2026</span>
+                    </div>
+                </article>
+
+                <nav class='toc'><h4>On This Page</h4><ul><li style='margin-left:0px'><a href='#general-questions'>General Questions</a></li><li style='margin-left:20px'><a href='#what-is-clockwork'>What is Clockwork?</a></li><li style='margin-left:20px'><a href='#is-clockwork-production-ready'>Is Clockwork production-ready?</a></li><li style='margin-left:20px'><a href='#which-package-manager-can-i-use'>Which package manager can I use?</a></li><li style='margin-left:20px'><a href='#what-node-version-is-expected'>What Node version is expected?</a></li><li style='margin-left:0px'><a href='#usage-questions'>Usage Questions</a></li><li style='margin-left:20px'><a href='#which-package-should-i-start-with'>Which package should I start with?</a></li><li style='margin-left:20px'><a href='#how-do-i-add-clockwork-to-my-project'>How do I add Clockwork to my project?</a></li><li style='margin-left:20px'><a href='#how-do-i-run-my-app-locally'>How do I run my app locally?</a></li><li style='margin-left:20px'><a href='#how-do-i-run-tests'>How do I run tests?</a></li><li style='margin-left:0px'><a href='#architecture-questions'>Architecture Questions</a></li><li style='margin-left:20px'><a href='#what-does-'>What does</a></li><li style='margin-left:20px'><a href='#qti-clockwork-app'>qti-clockwork-app</a></li><li style='margin-left:20px'><a href='#-provide'>provide?</a></li><li style='margin-left:20px'><a href='#how-does-the-scheduler-work'>How does the scheduler work?</a></li><li style='margin-left:20px'><a href='#is-determinism-considered'>Is determinism considered?</a></li><li style='margin-left:20px'><a href='#can-i-use-only-one-package'>Can I use only one package?</a></li><li style='margin-left:0px'><a href='#tooling-questions'>Tooling Questions</a></li><li style='margin-left:20px'><a href='#how-are-typescript-and-javascript-configured-across-packages'>How are TypeScript and JavaScript configured across packages?</a></li><li style='margin-left:20px'><a href='#why-are-there-alias-mappings-in-typescript/javascript-tooling-and-vitest'>Why are there alias mappings in TypeScript/JavaScript tooling and Vitest?</a></li><li style='margin-left:20px'><a href='#what-formatter/linter-rules-should-i-follow'>What formatter/linter rules should I follow?</a></li><li style='margin-left:20px'><a href='#does-ci-run-the-same-checks-locally-available'>Does CI run the same checks locally available?</a></li><li style='margin-left:0px'><a href='#contribution-questions'>Contribution Questions</a></li><li style='margin-left:20px'><a href='#where-are-contribution-guidelines'>Where are contribution guidelines?</a></li><li style='margin-left:20px'><a href='#where-should-i-report-security-issues'>Where should I report security issues?</a></li><li style='margin-left:20px'><a href='#is-there-a-code-of-conduct'>Is there a code of conduct?</a></li><li style='margin-left:20px'><a href='#is-this-project-mit-licensed'>Is this project MIT licensed?</a></li></ul></nav>
+            </div>
+
+            <footer class="doc-footer">
+                <div class="footer-content">
+                    <div class="alpha-banner">Theme colours designed by MothDebugged.</div>
+                    <div class="footer-links">
+                        <a href="https://github.com/quiet-terminal-interactive/clockwork/issues" target="_blank">Report Issue</a>
+                        <span class="separator">•</span>
+                        <a href="https://github.com/quiet-terminal-interactive/clockwork/blob/main/LICENSE" target="_blank">License</a>
+                        <span class="separator">•</span>
+                        <a href="https://github.com/quiet-terminal-interactive/clockwork" target="_blank">Contribute</a>
+                    </div>
+                </div>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.toc a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                });
+            });
+
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    const id = entry.target.getAttribute('id');
+                    if (entry.isIntersecting) {
+                        document.querySelectorAll('.toc a').forEach(link => {
+                            link.classList.remove('active');
+                        });
+                        const activeLink = document.querySelector(`.toc a[href="#${id}"]`);
+                        if (activeLink) {
+                            activeLink.classList.add('active');
+                        }
+                    }
+                });
+            }, { rootMargin: '-20% 0px -80% 0px' });
+
+            document.querySelectorAll('h2[id], h3[id]').forEach(heading => {
+                observer.observe(heading);
+            });
+        });
+    </script>
+</body>
+
+</html>

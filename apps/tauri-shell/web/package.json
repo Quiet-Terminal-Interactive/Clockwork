@@ -10,7 +10,7 @@
                     "typecheck":  "tsc -p tsconfig.json --noEmit"
                 },
     "dependencies":  {
-                         "qti-clockwork-ecs":  "workspace:^1.0.0"
+                         "qti-clockwork-ecs": "workspace:^1.0.0"
                      }
 }
 

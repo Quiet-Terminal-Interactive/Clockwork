@@ -44,20 +44,20 @@ importers:
 
   apps/tauri-shell/web:
     dependencies:
-      'qti-clockwork-ecs':
-        specifier: workspace:*
+      qti-clockwork-ecs:
+        specifier: workspace:^1.0.0
         version: link:../../../engine/core/ecs
 
   engine/core/app:
     dependencies:
-      'qti-clockwork-ecs':
-        specifier: workspace:^0.1.0
+      qti-clockwork-ecs:
+        specifier: workspace:^1.0.0
         version: link:../ecs
-      'qti-clockwork-events':
-        specifier: workspace:^0.1.0
+      qti-clockwork-events:
+        specifier: workspace:^1.0.0
         version: link:../events
-      'qti-clockwork-scheduler':
-        specifier: workspace:^0.1.0
+      qti-clockwork-scheduler:
+        specifier: workspace:^1.0.0
         version: link:../scheduler
 
   engine/core/assets: {}
@@ -74,34 +74,34 @@ importers:
 
   engine/core/serialization:
     dependencies:
-      'qti-clockwork-ecs':
-        specifier: workspace:^0.1.0
+      qti-clockwork-ecs:
+        specifier: workspace:^1.0.0
         version: link:../ecs
 
   engine/platform/tauri-bridge:
     dependencies:
-      'qti-clockwork-app':
-        specifier: workspace:^0.1.0
+      qti-clockwork-app:
+        specifier: workspace:^1.0.0
         version: link:../../core/app
 
   engine/renderer-webgl2/gl: {}
 
   engine/renderer-webgl2/materials:
     dependencies:
-      'qti-clockwork-assets':
-        specifier: workspace:^0.1.0
+      qti-clockwork-assets:
+        specifier: workspace:^1.0.0
         version: link:../../core/assets
-      'qti-clockwork-gl':
-        specifier: workspace:^0.1.0
+      qti-clockwork-gl:
+        specifier: workspace:^1.0.0
         version: link:../gl
 
   engine/renderer-webgl2/passes:
     dependencies:
-      'qti-clockwork-gl':
-        specifier: workspace:^0.1.0
+      qti-clockwork-gl:
+        specifier: workspace:^1.0.0
         version: link:../gl
-      'qti-clockwork-materials':
-        specifier: workspace:^0.1.0
+      qti-clockwork-materials:
+        specifier: workspace:^1.0.0
         version: link:../materials
 
   engine/renderer-webgl2/shaders: {}
@@ -2471,4 +2471,3 @@ snapshots:
   word-wrap@1.2.5: {}
 
   yocto-queue@0.1.0: {}
-

@@ -55,7 +55,7 @@ jobs:
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
           GPG_KEY_ID: ${{ secrets.GPG_KEY_ID }}
 
-      - name: Configure Maven settings (Central Portal + GPG)
+      - name: Configure Maven settings (Central Portal)
         uses: s4u/maven-settings-action@v3.0.0
         with:
           servers: |
@@ -63,11 +63,6 @@ jobs:
               "id": "central",
               "username": "${{ secrets.MAVEN_CENTRAL_USERNAME }}",
               "password": "${{ secrets.MAVEN_CENTRAL_PASSWORD }}"
-            },
-            {
-              "id": "gpg.passphrase",
-              "username": "gpg",
-              "password": "${{ secrets.GPG_PASSPHRASE }}"
             }]
 
       - name: Configure GPG for headless signing
@@ -104,6 +99,8 @@ jobs:
             -DskipTests \
             -DskipDependencyCheck \
             -Dgpg.keyname="${{ secrets.GPG_KEY_ID }}"
+        env:
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
       - name: Generate changelog
         id: changelog

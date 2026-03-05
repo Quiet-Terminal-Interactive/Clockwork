@@ -1,0 +1,28 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "rootDir": "src",
+    "outDir": "dist",
+    "disableSourceOfProjectReferenceRedirect": true,
+    "paths": {
+      "qti-clockwork-app": ["../app/dist/index.d.ts"],
+      "qti-clockwork-ecs": ["../ecs/dist/index.d.ts"],
+      "qti-clockwork-math": ["../math/dist/index.d.ts"],
+      "qti-clockwork-physics": ["../physics/dist/index.d.ts"],
+      "qti-clockwork-passes": ["../../renderer-webgl2/passes/dist/index.d.ts"],
+      "qti-clockwork-serialization": ["../serialization/dist/index.d.ts"],
+      "qti-clockwork-scheduler": ["../scheduler/dist/index.d.ts"]
+    }
+  },
+  "include": ["src/**/*.ts"],
+  "references": [
+    { "path": "../app" },
+    { "path": "../ecs" },
+    { "path": "../math" },
+    { "path": "../physics" },
+    { "path": "../scheduler" },
+    { "path": "../serialization" },
+    { "path": "../../renderer-webgl2/passes" }
+  ]
+}

@@ -1,0 +1,5 @@
+packages:
+  - 'engine/core/*'
+  - 'engine/renderer-webgl2/*'
+  - 'engine/platform/*'
+  - 'apps/*/web'

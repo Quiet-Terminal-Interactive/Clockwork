@@ -1,0 +1,80 @@
+name: clockwork-jvm Bundle Update
+
+on:
+  workflow_dispatch:
+    inputs:
+      filter:
+        description: 'pnpm workspace filter for the bundle step'
+        required: false
+        default: 'qti-clockwork-app'
+  schedule:
+    - cron: '0 8 * * 1'
+
+jobs:
+  update-bundle:
+    name: Rebuild JS bundle and open PR
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.6.3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build JVM bundle
+        run: pnpm --filter ${{ github.event.inputs.filter || 'qti-clockwork-app' }} bundle:jvm
+
+      - name: Write checksum stamp
+        run: |
+          BUNDLE=clockwork-jvm/clockwork-jvm-core/src/main/resources/js/bundle/clockwork.bundle.js
+          SHA=$(sha256sum "$BUNDLE" | awk '{print $1}')
+          DATE=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          echo "// bundleVersion: auto | sha256: $SHA | updated: $DATE" > /tmp/stamp.txt
+          cat "$BUNDLE" >> /tmp/stamp.txt
+          mv /tmp/stamp.txt "$BUNDLE"
+
+      - name: Check for changes
+        id: diff
+        run: |
+          if git diff --quiet clockwork-jvm/clockwork-jvm-core/src/main/resources/js/; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create pull request
+        if: steps.diff.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: chore/clockwork-jvm-bundle-update
+          commit-message: 'chore(clockwork-jvm): update JS bundle'
+          title: 'chore(clockwork-jvm): update Clockwork JS bundle'
+          body: |
+            Automated bundle update from `pnpm bundle:jvm`.
+
+            The committed `clockwork.bundle.js` has been rebuilt from the current
+            workspace packages. Review the diff to verify no unexpected API changes
+            were introduced before merging.
+
+            **Checklist:**
+            - [ ] `bridgeApiVersion` in the bundle matches `ClockworkBridge.EXPECTED_API_VERSION`
+            - [ ] `bundleVersion` bumped if Clockwork released a new version
+            - [ ] Integration tests pass (`mvn verify` in `clockwork-jvm/`)
+          labels: 'clockwork-jvm,dependencies'
+          add-paths: clockwork-jvm/clockwork-jvm-core/src/main/resources/js/
+
+      - name: No bundle changes
+        if: steps.diff.outputs.changed == 'false'
+        run: echo "Bundle is already up to date — no PR needed."

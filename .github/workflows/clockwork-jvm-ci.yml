@@ -1,0 +1,95 @@
+name: clockwork-jvm CI
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - 'clockwork-jvm/**'
+      - '.github/workflows/clockwork-jvm-ci.yml'
+  pull_request:
+    paths:
+      - 'clockwork-jvm/**'
+      - '.github/workflows/clockwork-jvm-ci.yml'
+
+defaults:
+  run:
+    working-directory: clockwork-jvm
+
+jobs:
+  build:
+    name: Build & Test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up GraalVM JDK 21
+        uses: graalvm/setup-graalvm@v1
+        with:
+          java-version: '21'
+          version: '24.0.2'
+          distribution: 'graalvm'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Cache Maven local repository
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('clockwork-jvm/pom.xml', 'clockwork-jvm/clockwork-jvm-core/pom.xml', 'clockwork-jvm/clockwork-jvm-renderer/pom.xml', 'clockwork-jvm/clockwork-jvm-plugins/pom.xml') }}
+          restore-keys: ${{ runner.os }}-maven-
+
+      - name: Build and test
+        run: mvn verify -DskipDependencyCheck
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ matrix.os }}
+          path: clockwork-jvm/*/target/surefire-reports/
+
+      - name: Upload jar artifacts (Linux only)
+        if: matrix.os == 'ubuntu-latest'
+        uses: actions/upload-artifact@v4
+        with:
+          name: clockwork-jvm-jars
+          path: clockwork-jvm/*/target/clockwork-jvm-*.jar
+
+  dependency-check:
+    name: OWASP Dependency Check
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up GraalVM JDK 21
+        uses: graalvm/setup-graalvm@v1
+        with:
+          java-version: '21'
+          version: '24.0.2'
+          distribution: 'graalvm'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Cache Maven local repository
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('clockwork-jvm/pom.xml', 'clockwork-jvm/clockwork-jvm-core/pom.xml', 'clockwork-jvm/clockwork-jvm-renderer/pom.xml', 'clockwork-jvm/clockwork-jvm-plugins/pom.xml') }}
+          restore-keys: ${{ runner.os }}-maven-
+
+      - name: Run OWASP dependency check
+        run: mvn -DnvdApiKey="${NVD_API_KEY}" dependency-check:check
+        env:
+          NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
+
+      - name: Upload dependency check reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dependency-check-report
+          path: clockwork-jvm/*/target/dependency-check-report.*

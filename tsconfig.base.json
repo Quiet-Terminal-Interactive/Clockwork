@@ -1,0 +1,47 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+    "composite": true,
+    "baseUrl": ".",
+    "paths": {
+      "qti-clockwork-app": ["engine/core/app/src/index.ts"],
+      "qti-clockwork-assets": ["engine/core/assets/src/index.ts"],
+      "qti-clockwork-audio": ["engine/core/audio/src/index.ts"],
+      "qti-clockwork-ecs": ["engine/core/ecs/src/index.ts"],
+      "qti-clockwork-events": ["engine/core/events/src/index.ts"],
+      "qti-clockwork-physics": ["engine/core/physics/src/index.ts"],
+      "qti-clockwork-input": ["engine/core/input/src/index.ts"],
+      "qti-clockwork-scheduler": ["engine/core/scheduler/src/index.ts"],
+      "qti-clockwork-serialization": ["engine/core/serialization/src/index.ts"],
+      "qti-neon-client": ["engine/core/neon/src/index.ts"],
+      "qti-clockwork-math": ["engine/core/math/src/index.ts"],
+      "qti-clockwork-particles": ["engine/core/particles/src/index.ts"],
+      "qti-clockwork-math/fixed": ["engine/core/math/src/fixed.ts"],
+      "qti-clockwork-math/vec2": ["engine/core/math/src/vec2.ts"],
+      "qti-clockwork-math/aabb": ["engine/core/math/src/aabb.ts"],
+      "qti-clockwork-tauri-bridge": [
+        "engine/platform/tauri-bridge/src/index.ts"
+      ],
+      "qti-clockwork-gl": ["engine/renderer-webgl2/gl/src/index.ts"],
+      "qti-clockwork-materials": [
+        "engine/renderer-webgl2/materials/src/index.ts"
+      ],
+      "qti-clockwork-passes": ["engine/renderer-webgl2/passes/src/index.ts"],
+      "qti-clockwork-shaders": ["engine/renderer-webgl2/shaders/src/index.ts"],
+      "qti-clockwork-lighting": ["engine/renderer-webgl2/lighting/src/index.ts"]
+    }
+  }
+}

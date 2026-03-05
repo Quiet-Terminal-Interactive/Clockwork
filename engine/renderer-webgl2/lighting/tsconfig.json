@@ -1,0 +1,27 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "composite": false,
+    "rootDir": "src",
+    "outDir": "dist",
+    "disableSourceOfProjectReferenceRedirect": true,
+    "paths": {
+      "qti-clockwork-app": ["../../core/app/dist/index.d.ts"],
+      "qti-clockwork-ecs": ["../../core/ecs/dist/index.d.ts"],
+      "qti-clockwork-gl": ["../gl/dist/index.d.ts"],
+      "qti-clockwork-materials": ["../materials/dist/index.d.ts"],
+      "qti-clockwork-passes": ["../passes/dist/index.d.ts"],
+      "qti-clockwork-scheduler": ["../../core/scheduler/dist/index.d.ts"]
+    }
+  },
+  "include": ["src/**/*.ts"],
+  "references": [
+    { "path": "../../core/app" },
+    { "path": "../../core/ecs" },
+    { "path": "../../core/scheduler" },
+    { "path": "../gl" },
+    { "path": "../materials" },
+    { "path": "../passes" }
+  ]
+}

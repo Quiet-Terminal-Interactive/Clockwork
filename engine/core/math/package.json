@@ -1,0 +1,39 @@
+{
+  "name": "qti-clockwork-math",
+  "version": "1.0.1",
+  "type": "module",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "prepack": "pnpm run build"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./fixed": {
+      "types": "./dist/fixed.d.ts",
+      "import": "./dist/fixed.js",
+      "require": "./dist/fixed.cjs"
+    },
+    "./vec2": {
+      "types": "./dist/vec2.d.ts",
+      "import": "./dist/vec2.js",
+      "require": "./dist/vec2.cjs"
+    },
+    "./aabb": {
+      "types": "./dist/aabb.d.ts",
+      "import": "./dist/aabb.js",
+      "require": "./dist/aabb.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ]
+}

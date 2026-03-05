@@ -1,0 +1,34 @@
+{
+  "name": "qti-clockwork-particles",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --dts --clean",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "prepack": "pnpm run build"
+  },
+  "dependencies": {
+    "qti-clockwork-app": "workspace:^1.0.0",
+    "qti-clockwork-ecs": "workspace:^1.0.0",
+    "qti-clockwork-math": "workspace:^1.0.0",
+    "qti-clockwork-physics": "workspace:^1.0.0",
+    "qti-clockwork-passes": "workspace:^1.0.0",
+    "qti-clockwork-serialization": "workspace:^1.0.0",
+    "qti-clockwork-scheduler": "workspace:^1.0.0"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ]
+}

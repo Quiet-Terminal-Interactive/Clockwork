@@ -1,0 +1,144 @@
+name: clockwork-jvm Release
+
+on:
+  push:
+    tags:
+      - 'clockwork-jvm/v*'
+
+defaults:
+  run:
+    working-directory: clockwork-jvm
+
+jobs:
+  release:
+    name: Release to Maven Central
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up GraalVM JDK 21
+        uses: graalvm/setup-graalvm@v1
+        with:
+          java-version: '21'
+          distribution: 'graalvm'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Cache Maven local repository
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('clockwork-jvm/pom.xml', 'clockwork-jvm/clockwork-jvm-core/pom.xml', 'clockwork-jvm/clockwork-jvm-renderer/pom.xml', 'clockwork-jvm/clockwork-jvm-plugins/pom.xml') }}
+          restore-keys: ${{ runner.os }}-maven-
+
+      - name: Configure Maven settings (Central Portal + GPG)
+        uses: s4u/maven-settings-action@v3.0.0
+        with:
+          servers: |
+            [{
+              "id": "central",
+              "username": "${{ secrets.MAVEN_CENTRAL_USERNAME }}",
+              "password": "${{ secrets.MAVEN_CENTRAL_PASSWORD }}"
+            },
+            {
+              "id": "${{ secrets.GPG_KEY_ID }}",
+              "username": "gpg",
+              "password": "${{ secrets.GPG_PASSPHRASE }}"
+            }]
+
+      - name: Import GPG signing key
+        run: echo "${{ secrets.GPG_PRIVATE_KEY }}" | gpg --batch --import
+
+      - name: Extract version from tag
+        id: version
+        run: |
+          TAG="${{ github.ref_name }}"
+          VERSION="${TAG#clockwork-jvm/v}"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Verify pom.xml version matches tag
+        run: |
+          POM_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout | tail -n 1 | tr -d '\r')
+          TAG_VERSION="${{ steps.version.outputs.version }}"
+          if [ "$POM_VERSION" != "$TAG_VERSION" ]; then
+            echo "ERROR: pom.xml version ($POM_VERSION) does not match tag ($TAG_VERSION)"
+            exit 1
+          fi
+
+      - name: Build, sign, and publish to Maven Central
+        run: |
+          mvn deploy \
+            -P release \
+            -DskipTests \
+            -DskipDependencyCheck \
+            -Dgpg.keyname="${{ secrets.GPG_KEY_ID }}"
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          PREV_TAG=$(git tag --list 'clockwork-jvm/v*' --sort=-version:refname | grep -v "^${{ github.ref_name }}$" | head -1)
+          if [ -z "$PREV_TAG" ]; then
+            RANGE="HEAD"
+          else
+            RANGE="${PREV_TAG}..HEAD"
+          fi
+          NOTES=$(git log "$RANGE" \
+            --pretty=format:"- %s (%h)" \
+            -- clockwork-jvm/ \
+            | head -100)
+          echo "notes<<CHANGELOG_EOF" >> "$GITHUB_OUTPUT"
+          echo "$NOTES" >> "$GITHUB_OUTPUT"
+          echo "CHANGELOG_EOF" >> "$GITHUB_OUTPUT"
+
+      - name: Collect jars for release assets
+        run: |
+          mkdir -p /tmp/release-assets
+          find . -path '*/target/clockwork-jvm-*.jar' | xargs -I{} cp {} /tmp/release-assets/ 2>/dev/null || true
+
+      - name: Create GitHub Release (draft)
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: clockwork-jvm v${{ steps.version.outputs.version }}
+          draft: true
+          body: |
+            ## clockwork-jvm v${{ steps.version.outputs.version }}
+
+            ### Maven dependencies
+
+            ```xml
+            <dependency>
+                <groupId>com.quietterminal</groupId>
+                <artifactId>clockwork-jvm-core</artifactId>
+                <version>${{ steps.version.outputs.version }}</version>
+            </dependency>
+
+            <!-- Optional: LWJGL renderer -->
+            <dependency>
+                <groupId>com.quietterminal</groupId>
+                <artifactId>clockwork-jvm-renderer</artifactId>
+                <version>${{ steps.version.outputs.version }}</version>
+            </dependency>
+
+            <!-- Optional: physics and neon plugin wrappers -->
+            <dependency>
+                <groupId>com.quietterminal</groupId>
+                <artifactId>clockwork-jvm-plugins</artifactId>
+                <version>${{ steps.version.outputs.version }}</version>
+            </dependency>
+            ```
+
+            ### Changes
+
+            ${{ steps.changelog.outputs.notes }}
+
+            ---
+            Published to Maven Central:
+            [clockwork-jvm-core](https://central.sonatype.com/artifact/com.quietterminal/clockwork-jvm-core) |
+            [clockwork-jvm-renderer](https://central.sonatype.com/artifact/com.quietterminal/clockwork-jvm-renderer) |
+            [clockwork-jvm-plugins](https://central.sonatype.com/artifact/com.quietterminal/clockwork-jvm-plugins)
+          files: /tmp/release-assets/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

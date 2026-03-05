@@ -33,6 +33,28 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('clockwork-jvm/pom.xml', 'clockwork-jvm/clockwork-jvm-core/pom.xml', 'clockwork-jvm/clockwork-jvm-renderer/pom.xml', 'clockwork-jvm/clockwork-jvm-plugins/pom.xml') }}
           restore-keys: ${{ runner.os }}-maven-
 
+      - name: Validate release secrets
+        run: |
+          required=(
+            MAVEN_CENTRAL_USERNAME
+            MAVEN_CENTRAL_PASSWORD
+            GPG_PRIVATE_KEY
+            GPG_PASSPHRASE
+            GPG_KEY_ID
+          )
+          for name in "${required[@]}"; do
+            if [ -z "${!name}" ]; then
+              echo "ERROR: Missing required secret: $name"
+              exit 1
+            fi
+          done
+        env:
+          MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          MAVEN_CENTRAL_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          GPG_KEY_ID: ${{ secrets.GPG_KEY_ID }}
+
       - name: Configure Maven settings (Central Portal + GPG)
         uses: s4u/maven-settings-action@v3.0.0
         with:
@@ -43,7 +65,7 @@ jobs:
               "password": "${{ secrets.MAVEN_CENTRAL_PASSWORD }}"
             },
             {
-              "id": "${{ secrets.GPG_KEY_ID }}",
+              "id": "gpg.passphrase",
               "username": "gpg",
               "password": "${{ secrets.GPG_PASSPHRASE }}"
             }]

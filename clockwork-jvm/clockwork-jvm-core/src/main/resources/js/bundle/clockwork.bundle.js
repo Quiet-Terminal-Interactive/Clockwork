@@ -803,13 +803,20 @@
 
   function createBridgeApi() {
     const systems = {
+      BOOT: [],
+      PRE_UPDATE: [],
       FIXED_UPDATE: [],
       UPDATE: [],
-      RENDER: []
+      LATE_UPDATE: [],
+      RENDER_PREP: [],
+      RENDER: [],
+      POST_RENDER: [],
+      SHUTDOWN: []
     };
     const worlds = [];
     const MAX_FIXED_STEPS_PER_FRAME = 8;
     let fixedAccumulator = 0;
+    let bootExecuted = false;
 
     function executeSystems(callbacks, tick, deltaSeconds, fixedDeltaSeconds) {
       for (const callback of callbacks) {
@@ -838,6 +845,13 @@
           throw new Error("fixedDeltaSeconds must be a positive finite number");
         }
 
+        if (!bootExecuted) {
+          executeSystems(systems.BOOT, tick, deltaSeconds, fixedDeltaSeconds);
+          bootExecuted = true;
+        }
+
+        executeSystems(systems.PRE_UPDATE, tick, deltaSeconds, fixedDeltaSeconds);
+
         const clamp = fixedDeltaSeconds * MAX_FIXED_STEPS_PER_FRAME;
         fixedAccumulator = Math.min(fixedAccumulator + deltaSeconds, clamp);
 
@@ -852,14 +866,27 @@
         }
 
         executeSystems(systems.UPDATE, tick, deltaSeconds, fixedDeltaSeconds);
+        executeSystems(systems.LATE_UPDATE, tick, deltaSeconds, fixedDeltaSeconds);
+        executeSystems(systems.RENDER_PREP, tick, deltaSeconds, fixedDeltaSeconds);
         executeSystems(systems.RENDER, tick, deltaSeconds, fixedDeltaSeconds);
+        executeSystems(systems.POST_RENDER, tick, deltaSeconds, fixedDeltaSeconds);
+      },
+      shutdown(tick, fixedDeltaSeconds) {
+        executeSystems(systems.SHUTDOWN, tick, 0, fixedDeltaSeconds);
       },
       dispose() {
+        systems.BOOT.length = 0;
+        systems.PRE_UPDATE.length = 0;
         systems.FIXED_UPDATE.length = 0;
         systems.UPDATE.length = 0;
+        systems.LATE_UPDATE.length = 0;
+        systems.RENDER_PREP.length = 0;
         systems.RENDER.length = 0;
+        systems.POST_RENDER.length = 0;
+        systems.SHUTDOWN.length = 0;
         worlds.length = 0;
         fixedAccumulator = 0;
+        bootExecuted = false;
       }
     };
   }

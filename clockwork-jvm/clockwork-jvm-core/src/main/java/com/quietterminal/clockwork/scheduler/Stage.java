@@ -1,8 +1,14 @@
 package com.quietterminal.clockwork.scheduler;
 
-/** Scheduler stages. */
+/** Scheduler stages, in execution order. */
 public enum Stage {
+    BOOT,
+    PRE_UPDATE,
     FIXED_UPDATE,
     UPDATE,
-    RENDER
+    LATE_UPDATE,
+    RENDER_PREP,
+    RENDER,
+    POST_RENDER,
+    SHUTDOWN
 }

@@ -121,6 +121,18 @@ public final class ClockworkBridge implements AutoCloseable {
         });
     }
 
+    public synchronized void shutdownScheduler(long tick, double fixedDeltaSeconds) {
+        assertThread();
+        ensureBridgeApi();
+        tracer.trace("shutdown", () -> {
+            try {
+                bridgeApi.invokeMember("shutdown", tick, fixedDeltaSeconds);
+            } catch (RuntimeException e) {
+                throw new ClockworkBridgeException("JS scheduler shutdown failed.", e);
+            }
+        });
+    }
+
     @Override
     public synchronized void close() {
         if (context == null) {

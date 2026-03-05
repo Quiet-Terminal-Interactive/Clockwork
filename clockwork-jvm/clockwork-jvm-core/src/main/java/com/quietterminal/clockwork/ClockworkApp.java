@@ -177,6 +177,18 @@ public final class ClockworkApp {
             }
         }
 
+        if (built && world != null) {
+            try {
+                bridge.shutdownScheduler(tick, DEFAULT_FIXED_DELTA_SECONDS);
+            } catch (RuntimeException e) {
+                if (shutdownError == null) {
+                    shutdownError = e;
+                } else {
+                    shutdownError.addSuppressed(e);
+                }
+            }
+        }
+
         if (world != null) {
             world.close();
         }

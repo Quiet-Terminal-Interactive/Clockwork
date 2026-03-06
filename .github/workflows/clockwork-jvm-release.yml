@@ -94,12 +94,49 @@ jobs:
             exit 1
           fi
 
-      - name: Build, sign, and publish to Maven Central
+      - name: Determine modules to publish
+        id: filter
+        run: |
+          MODULES=""
+          for ARTIFACT in clockwork-jvm-core clockwork-jvm-renderer clockwork-jvm-plugins; do
+            VERSION=$(mvn help:evaluate -pl "$ARTIFACT" -Dexpression=project.version -q -DforceStdout | tail -n 1 | tr -d '\r')
+            URL="https://repo1.maven.org/maven2/com/quietterminal/${ARTIFACT}/${VERSION}/${ARTIFACT}-${VERSION}.pom"
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$URL")
+            if [ "$STATUS" = "200" ]; then
+              echo "Skipping ${ARTIFACT}@${VERSION} — already on Maven Central"
+            else
+              echo "Queuing ${ARTIFACT}@${VERSION} for publish"
+              MODULES="${MODULES}${ARTIFACT},"
+            fi
+          done
+          MODULES="${MODULES%,}"
+          if [ -z "$MODULES" ]; then
+            echo "No new module versions to publish — all versions already exist on Maven Central"
+            echo "has_modules=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "Modules to publish: $MODULES"
+            echo "has_modules=true" >> "$GITHUB_OUTPUT"
+          fi
+          echo "modules=$MODULES" >> "$GITHUB_OUTPUT"
+
+      - name: Build and sign all modules
+        run: |
+          mvn install \
+            -P release \
+            -DskipTests \
+            -DskipDependencyCheck \
+            -Dgpg.keyname="${{ secrets.GPG_KEY_ID }}"
+        env:
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+
+      - name: Publish new modules to Maven Central
+        if: steps.filter.outputs.has_modules == 'true'
         run: |
           mvn deploy \
             -P release \
             -DskipTests \
             -DskipDependencyCheck \
+            -pl "${{ steps.filter.outputs.modules }}" \
             -Dgpg.keyname="${{ secrets.GPG_KEY_ID }}"
         env:
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}

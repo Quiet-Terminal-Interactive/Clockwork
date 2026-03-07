@@ -237,7 +237,7 @@ public final class ClockworkBridge implements AutoCloseable {
 
         return new CapabilityReport(
             engine,
-            System.getProperty("java.vm.name", ""),
+            System.getProperty("java.vm.name", "") + " " + System.getProperty("java.vm.vendor", ""),
             engine.getVersion(),
             engine.getLanguages().containsKey("js"),
             warnings
